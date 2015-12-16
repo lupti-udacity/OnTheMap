@@ -13,7 +13,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
+    var currentStudent: Student? //** Current user logged in
+    var students : [Student]? //** Array of students
+    var onTheMap : Bool?  //** If student loction is posted this is true
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         return true
