@@ -136,8 +136,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
             if student == nil {
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let addPinNav = storyboard.instantiateViewControllerWithIdentifier("addPinNav") as? UINavigationController
-                self.presentViewController(addPinNav!, animated: true, completion: nil)
+                let addNewPin = storyboard.instantiateViewControllerWithIdentifier("addNewPin") as? UINavigationController
+                self.presentViewController(addNewPin!, animated: true, completion: nil)
             } else {
                 self.showOverwriteAlert("Alert", message: "Student pin already exists", student: student)
             }
@@ -175,8 +175,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 alert.addAction(UIAlertAction(title: "cancel", style: UIAlertActionStyle.Default, handler: nil))
                 alert.addAction(UIAlertAction(title: "overwrite", style: UIAlertActionStyle.Default, handler: { alert -> Void in
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                    let addPinNav = storyboard.instantiateViewControllerWithIdentifier("addPinNav") as? UINavigationController
-                    self.presentViewController(addPinNav!, animated: true, completion: nil)
+                    let addNewPin = storyboard.instantiateViewControllerWithIdentifier("addNewPin") as? UINavigationController
+                    self.presentViewController(addNewPin!, animated: true, completion: nil)
                 }))
                 self.presentViewController(alert, animated: true, completion: nil)
             }

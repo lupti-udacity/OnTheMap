@@ -1,5 +1,5 @@
 //
-//  TableController.swift
+//  TableListController.swift
 //  OnTheMap
 //
 //  Created by Lupti on 12/15/15.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TableController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class TableListController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     var applicationDelegate: AppDelegate?
     var students: [Student]?
