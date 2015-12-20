@@ -94,36 +94,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     @IBAction func reloadButtonPressed(sender: AnyObject) {
         getStudentsFromServer()
     }
-    
-    @IBAction func deletePinPressed(sender: AnyObject) {
-        activityIndicator.startAnimating()
-        let parseClient = ParseClient.sharedInstance
-        parseClient.queryForStudent(uniqueKey!){
-            (student, errorString) in
-            if let student = student {
-                if let objectId = student.objectId{
-                    self.applicationDelegate!.currentStudent!.objectId = objectId
-                    parseClient.deleteStudent(objectId){ completed, errorString in
-                        if completed == false {
-                            if let errorDescription = errorString {
-                                self.showAlert("Error", message: errorDescription)
-                            } else {
-                                self.showAlert("Error", message: "Error while deleting")
-                            }
-                        } else {
-                            self.stopActivityIndicator()
-                            self.getStudentsFromServer()
-                        }
-                    }
-                } else {
-                    self.showAlert("Error", message: "error while getting objectId")
-                }
-            } else {
-                self.showAlert("Alert", message: "A pin has not been posted yet")
-            }
-        }
-    }
-    
+
     @IBAction func addPinPressed(sender: AnyObject) {
         let parseClient = ParseClient.sharedInstance
         parseClient.queryForStudent(uniqueKey!){
@@ -143,7 +114,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
         }
     }
-    
+
     @IBAction func logoutPressed(sender: AnyObject) {
         let logoutController = presentingViewController as? LoginViewController
         logoutController?.passwordTextField.text = ""
