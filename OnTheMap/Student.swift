@@ -29,7 +29,7 @@ struct Student {
         mediaURL = dictionary["mediaURL"] as? String
         latitude = dictionary["latitude"] as? Double
         longitude = dictionary["longitude"] as? Double
-        uniqueKey = dictionary["uniqueKey"] as? String
+        updatedAt = dictionary["updatedAt"] as? NSDate
 
         let formatter = NSDateFormatter()
         formatter.dateFormat = "yyy-MM-dd'T'HH:mm:ss'.'SSSZ"

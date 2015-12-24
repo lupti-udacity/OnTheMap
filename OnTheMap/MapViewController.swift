@@ -96,6 +96,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
 
     @IBAction func addPinPressed(sender: AnyObject) {
+        print("addPinPressed")
+    
         let parseClient = ParseClient.sharedInstance
         parseClient.queryForStudent(uniqueKey!){
             student, errorString in
@@ -139,7 +141,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     func showOverwriteAlert(title: String?, message: String?, student: Student?) {
         dispatch_async(dispatch_get_main_queue()){
-            self.activityIndicator.stopAnimating()
+            //self.activityIndicator.stopAnimating()
             if title != nil && message != nil {
                 let alert =
                 UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
@@ -163,6 +165,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     // MARK: - MKMapViewDelegate
     
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+        print("viewForAnnotation")
         let reuseId = "pin"
         var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
         if pinView == nil {
@@ -177,6 +180,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     func mapView(mapView: MKMapView, annotationView: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        print("mapView calloutAccessoryControlTapped")
         if control == annotationView.rightCalloutAccessoryView {
             let app = UIApplication.sharedApplication()
             
