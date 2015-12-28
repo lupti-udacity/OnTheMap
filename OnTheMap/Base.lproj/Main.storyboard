@@ -68,22 +68,22 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pVE-Ad-S0F">
-                                <rect key="frame" x="252" y="352" width="97" height="42"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="42" id="QrL-uS-7gQ"/>
-                                    <constraint firstAttribute="width" constant="97" id="t2d-8h-ILX"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
-                                <state key="normal" title="Enter"/>
-                                <connections>
-                                    <action selector="didPressEnter:" destination="nOW-X1-KbD" eventType="touchUpInside" id="AqC-9G-mMq"/>
-                                </connections>
-                            </button>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="eVb-nm-YfT">
                                 <rect key="frame" x="282" y="355" width="37" height="37"/>
                                 <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </activityIndicatorView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pVE-Ad-S0F">
+                                <rect key="frame" x="198" y="353" width="204" height="42"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="42" id="QrL-uS-7gQ"/>
+                                    <constraint firstAttribute="width" constant="204" id="t2d-8h-ILX"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <state key="normal" title="Find on the Map"/>
+                                <connections>
+                                    <action selector="didPressEnter:" destination="nOW-X1-KbD" eventType="touchUpInside" id="AqC-9G-mMq"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -92,7 +92,7 @@
                             <constraint firstAttribute="trailingMargin" secondItem="w1c-jZ-KXw" secondAttribute="trailing" id="AIa-56-hCg"/>
                             <constraint firstItem="7OK-IS-7V1" firstAttribute="centerX" secondItem="CUn-Vx-vO9" secondAttribute="centerX" id="EXX-Oa-VSK"/>
                             <constraint firstItem="w1c-jZ-KXw" firstAttribute="top" secondItem="7OK-IS-7V1" secondAttribute="bottom" constant="51" id="XKL-K7-K8A"/>
-                            <constraint firstItem="pVE-Ad-S0F" firstAttribute="top" secondItem="w1c-jZ-KXw" secondAttribute="bottom" constant="93" id="c5q-tx-JDZ"/>
+                            <constraint firstItem="pVE-Ad-S0F" firstAttribute="top" secondItem="w1c-jZ-KXw" secondAttribute="bottom" constant="94" id="c5q-tx-JDZ"/>
                             <constraint firstAttribute="leadingMargin" secondItem="w1c-jZ-KXw" secondAttribute="leading" id="ew3-Y8-ZAz"/>
                             <constraint firstItem="w1c-jZ-KXw" firstAttribute="centerX" secondItem="CUn-Vx-vO9" secondAttribute="centerX" id="fUt-68-OGK"/>
                             <constraint firstItem="7OK-IS-7V1" firstAttribute="top" secondItem="sgo-aL-WSR" secondAttribute="bottom" constant="62" id="kqs-M7-DGT"/>
