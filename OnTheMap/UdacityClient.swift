@@ -15,7 +15,7 @@ class UdacityClient: NSObject {
     static let publicDataUrl : String = "https://www.udacity.com/api/users/"
     typealias UdacityCompletionHandler =
         (data: [String: AnyObject]?, errorString: String?) -> Void
-    var session: NSURLSession
+    let session: NSURLSession
     
     override init() {
         session = NSURLSession.sharedSession()

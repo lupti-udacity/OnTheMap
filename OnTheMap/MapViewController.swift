@@ -9,6 +9,12 @@
 import UIKit
 import MapKit
 
+/*
+    Note: On this page we turn the activityIndicator animation ON to allow the activity effect as it is  transitioning from Login page to MapView page.
+    However, we can leave the animation OFF if it is intended to be triggered by some button action on this page. The activity animation will need to call its startAnimation() function.
+
+*/
+
 class MapViewController: UIViewController, MKMapViewDelegate {
     
     @IBOutlet weak var toolbar: UIToolbar!
@@ -30,9 +36,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     func getStudentsFromServer() {
-        activityIndicator.startAnimating()
+        
         let parseClient = ParseClient.sharedInstance
         parseClient.getStudentsLocation(){ (students, errorString) in
+            self.activityIndicator.startAnimating()
             if let students = students {
                 if let applicationDelegate = self.applicationDelegate{
                     var studentArray: [Student] = [Student]()
@@ -42,14 +49,16 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     if studentArray.count > 0 {
                         dispatch_async(dispatch_get_main_queue()){
                             applicationDelegate.students = studentArray
+                            // This is a critical step to repopulate or refreesh the entire physical mapView's annotations
                             if self.mapView.annotations.count > 0 {
                                 self.mapView.removeAnnotations(self.mapView.annotations)
                                 self.addAnnotationsToMap()
                             } else {
                                 self.addAnnotationsToMap()
                             }
+                            self.activityIndicator.stopAnimating()
                         }
-                        self.stopActivityIndicator()
+                        
                     } else { self.stopActivityIndicator() }
                 } else { self.showAlert("Error", message: "Unable to access App Delegate") }
             }else {
@@ -96,7 +105,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
 
     @IBAction func addPinPressed(sender: AnyObject) {
-        print("addPinPressed")
     
         let parseClient = ParseClient.sharedInstance
         parseClient.queryForStudent(uniqueKey!){
@@ -141,7 +149,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     func showOverwriteAlert(title: String?, message: String?, student: Student?) {
         dispatch_async(dispatch_get_main_queue()){
-            //self.activityIndicator.stopAnimating()
             if title != nil && message != nil {
                 let alert =
                 UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
@@ -165,7 +172,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     // MARK: - MKMapViewDelegate
     
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
-        print("viewForAnnotation")
         let reuseId = "pin"
         var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
         if pinView == nil {
@@ -180,7 +186,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     func mapView(mapView: MKMapView, annotationView: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-        print("mapView calloutAccessoryControlTapped")
         if control == annotationView.rightCalloutAccessoryView {
             let app = UIApplication.sharedApplication()
             

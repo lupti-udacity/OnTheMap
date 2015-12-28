@@ -28,7 +28,7 @@ class ParseClient: NSObject {
     
     func getStudentsLocation(completionHandler: (data: [[String: AnyObject]]?, errorString: String?) -> Void){
         let methodParameters = [
-            "order": "-createdAt,-updatedAt",
+            "order": "-updatedAt",
             "limit": 100,
         ]
         let request = NSMutableURLRequest(URL: NSURL(string:
@@ -50,7 +50,8 @@ class ParseClient: NSObject {
             } else {
                 completionHandler(data: nil, errorString: "Unable to get student location data")
             }
-        };task.resume()
+        }
+        task.resume()
     }
     
     func queryForStudent(uniqueKey: String?, completionHandler:(data: Student?, errorString: String?) -> Void){
@@ -77,7 +78,8 @@ class ParseClient: NSObject {
                     } else {
                         completionHandler(data: nil, errorString: "Unable to get user data")
                     }
-                }; task.resume()
+                }
+                task.resume()
             }
         }
     }
@@ -103,7 +105,7 @@ class ParseClient: NSObject {
         }
     }
     
-    func postStudent(student: Student?, completionHandler:(completed: Bool?,errorString: String?) -> Void ){
+    func postStudent(student: Student?, completionHandler:(completed: Bool?, errorString: String?) -> Void ){
         if student == nil {
             completionHandler(completed: false, errorString: "Invalid student data")
             return
@@ -127,11 +129,12 @@ class ParseClient: NSObject {
                 } else {
                     completionHandler(completed: false, errorString: "Unable to post student data")
                 }
-            }; task.resume()
+            }
+            task.resume()
         }
     }
     
-    func overwriteStudent(student: Student?, completionHandler:(completed: Bool?,errorString: String?) -> Void){
+    func overwriteStudent(student: Student?, completionHandler:(completed: Bool?, errorString: String?) -> Void){
         if let student = student{
             if let uniqueKey = student.uniqueKey, objectId = student.objectId, firstName = student.firstName, lastName = student.lastName, mapString = student.mapString, mediaURL = student.mediaURL, latitude = student.latitude, longitude = student.longitude{
                 let urlString = ParseClient.studentLocationUrl + objectId
@@ -157,7 +160,8 @@ class ParseClient: NSObject {
                             completionHandler(completed: false, errorString: "Error: Unable to overwrite")
                             return
                         }
-                    }; task.resume()
+                    }
+                    task.resume()
                 } else {
                     completionHandler(completed: false, errorString: "Error: Unable to overwrite")
                 }
@@ -217,7 +221,7 @@ class ParseClient: NSObject {
         }
     }
     
-    func parsePostStudentRequest(data data: NSData, completionHandler:(completed: Bool?,errorString: String?) -> Void) {
+    func parsePostStudentRequest(data data: NSData, completionHandler:(completed: Bool?, errorString: String?) -> Void) {
         do{
             if let parsedData =
                 try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as? [String: AnyObject]{
@@ -234,11 +238,14 @@ class ParseClient: NSObject {
         }
     }
     
-    func parseOverwriteRequest(data data: NSData, completionHandler: (completed: Bool?,errorString: String?) -> Void){
+    func parseOverwriteRequest(data data: NSData, completionHandler: (completed: Bool?, errorString: String?) -> Void){
         do{
             if let parsedData =
                 try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as? [String: AnyObject]{
                     if let _ = parsedData["updatedAt"] as? String{
+                        let url = parsedData["mediaURL"]
+                        print("++++ OverwriteRequest URL is \(url)")
+                        print("++++  OverwriteRequest Data \(parsedData)")
                         completionHandler(completed: true, errorString: nil)
                         return
                     }
