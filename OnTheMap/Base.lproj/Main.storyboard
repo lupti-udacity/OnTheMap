@@ -269,9 +269,8 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="3dp-JZ-ON4" firstAttribute="top" secondItem="hj2-IL-bpA" secondAttribute="topMargin" id="NFL-ay-vif"/>
-                            <constraint firstItem="3dp-JZ-ON4" firstAttribute="leading" secondItem="hj2-IL-bpA" secondAttribute="leading" id="Xmd-zY-nid"/>
-                            <constraint firstItem="CSE-7a-4pS" firstAttribute="centerX" secondItem="hj2-IL-bpA" secondAttribute="centerX" id="t1G-R5-Et1"/>
+                            <constraint firstItem="3dp-JZ-ON4" firstAttribute="top" secondItem="hj2-IL-bpA" secondAttribute="top" id="5RW-9P-qix"/>
+                            <constraint firstItem="3dp-JZ-ON4" firstAttribute="leading" secondItem="hj2-IL-bpA" secondAttribute="leading" id="Oq9-Ui-KKe"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Map" image="map" id="PxG-bG-pD6"/>
