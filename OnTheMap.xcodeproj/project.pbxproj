@@ -19,7 +19,11 @@
 		BC0381411C20A2F5003F78E8 /* TableListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC0381401C20A2F5003F78E8 /* TableListController.swift */; };
 		BC0381431C20A315003F78E8 /* LocationEntryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC0381421C20A315003F78E8 /* LocationEntryController.swift */; };
 		BC0381451C20A32B003F78E8 /* LinkEntryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC0381441C20A32B003F78E8 /* LinkEntryController.swift */; };
-		BC0381491C20AC5E003F78E8 /* Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC0381481C20AC5E003F78E8 /* Convenience.swift */; };
+		BC4D27BB1C39E2CD0094EFDC /* BorderedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC4D27BA1C39E2CD0094EFDC /* BorderedButton.swift */; };
+		BC5406561C31D83A00880BE8 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC5406531C31D83A00880BE8 /* FBSDKCoreKit.framework */; };
+		BC5406571C31D83A00880BE8 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC5406541C31D83A00880BE8 /* FBSDKLoginKit.framework */; };
+		BC5406581C31D83A00880BE8 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC5406551C31D83A00880BE8 /* FBSDKShareKit.framework */; };
+		BC54065C1C31F9BF00880BE8 /* UdacitySession.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC54065B1C31F9BF00880BE8 /* UdacitySession.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,7 +52,11 @@
 		BC0381401C20A2F5003F78E8 /* TableListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableListController.swift; sourceTree = "<group>"; };
 		BC0381421C20A315003F78E8 /* LocationEntryController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationEntryController.swift; sourceTree = "<group>"; };
 		BC0381441C20A32B003F78E8 /* LinkEntryController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkEntryController.swift; sourceTree = "<group>"; };
-		BC0381481C20AC5E003F78E8 /* Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Convenience.swift; sourceTree = "<group>"; };
+		BC4D27BA1C39E2CD0094EFDC /* BorderedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BorderedButton.swift; sourceTree = "<group>"; };
+		BC5406531C31D83A00880BE8 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		BC5406541C31D83A00880BE8 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		BC5406551C31D83A00880BE8 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
+		BC54065B1C31F9BF00880BE8 /* UdacitySession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacitySession.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +64,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BC5406571C31D83A00880BE8 /* FBSDKLoginKit.framework in Frameworks */,
+				BC5406561C31D83A00880BE8 /* FBSDKCoreKit.framework in Frameworks */,
+				BC5406581C31D83A00880BE8 /* FBSDKShareKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,6 +83,7 @@
 		BC0380D91C1FA0E5003F78E8 = {
 			isa = PBXGroup;
 			children = (
+				BC5406521C31D80A00880BE8 /* Frameworks */,
 				BC0380E41C1FA0E5003F78E8 /* OnTheMap */,
 				BC0380E31C1FA0E5003F78E8 /* Products */,
 			);
@@ -104,8 +116,8 @@
 		BC0381311C20A16F003F78E8 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				BC54065B1C31F9BF00880BE8 /* UdacitySession.swift */,
 				BC0381361C20A21E003F78E8 /* Student.swift */,
-				BC0381481C20AC5E003F78E8 /* Convenience.swift */,
 				BC0381351C20A1E6003F78E8 /* ParseAPI */,
 				BC0381341C20A1D6003F78E8 /* UdacityAPI */,
 			);
@@ -115,6 +127,7 @@
 		BC0381321C20A17F003F78E8 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				BC4D27BA1C39E2CD0094EFDC /* BorderedButton.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -161,6 +174,17 @@
 				BC0380F11C1FA0E5003F78E8 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BC5406521C31D80A00880BE8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BC5406531C31D83A00880BE8 /* FBSDKCoreKit.framework */,
+				BC5406541C31D83A00880BE8 /* FBSDKLoginKit.framework */,
+				BC5406551C31D83A00880BE8 /* FBSDKShareKit.framework */,
+			);
+			name = Frameworks;
+			path = OnTheMap;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -266,12 +290,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				BC0381391C20A293003F78E8 /* UdacityClient.swift in Sources */,
-				BC0381491C20AC5E003F78E8 /* Convenience.swift in Sources */,
 				BC0381431C20A315003F78E8 /* LocationEntryController.swift in Sources */,
 				BC03813B1C20A2A6003F78E8 /* ParseClient.swift in Sources */,
 				BC0380E81C1FA0E5003F78E8 /* LoginViewController.swift in Sources */,
 				BC0381411C20A2F5003F78E8 /* TableListController.swift in Sources */,
 				BC0381371C20A21E003F78E8 /* Student.swift in Sources */,
+				BC4D27BB1C39E2CD0094EFDC /* BorderedButton.swift in Sources */,
+				BC54065C1C31F9BF00880BE8 /* UdacitySession.swift in Sources */,
 				BC0380E61C1FA0E5003F78E8 /* AppDelegate.swift in Sources */,
 				BC0381451C20A32B003F78E8 /* LinkEntryController.swift in Sources */,
 				BC03813F1C20A2D4003F78E8 /* MapViewController.swift in Sources */,
@@ -401,6 +426,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/OnTheMap",
+				);
 				INFOPLIST_FILE = OnTheMap/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.lupti.OnTheMap;
@@ -413,6 +442,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/OnTheMap",
+				);
 				INFOPLIST_FILE = OnTheMap/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.lupti.OnTheMap;

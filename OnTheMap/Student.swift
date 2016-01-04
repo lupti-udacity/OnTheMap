@@ -9,7 +9,10 @@
 import Foundation
 
 struct Student {
-    
+    /*
+        For holding student transaction data retrieved from Parse data source
+        Populated by calling parseClient.getStudentsLocation()
+    */
     var objectId: String?
     var uniqueKey: String?
     var firstName: String?

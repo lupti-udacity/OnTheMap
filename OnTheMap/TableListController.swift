@@ -32,6 +32,8 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
         applicationDelegate?.students = nil
         applicationDelegate?.currentStudent = nil
         self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil )
+        let udacityClient = UdacityClient.sharedInstance
+        udacityClient.logoutSession()
     }
 
     @IBAction func refresh(sender: AnyObject) {
@@ -105,20 +107,12 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
                     for studentData in students {
                         
                         studentArray.append( Student(dictionary: studentData) )
-                        /*
-                        print("#### Student Key is \(studentData["uniqueKey"]) and Media is \(studentData["mediaURL"])")
-                        if String(studentData["uniqueKey"]!) == self.applicationDelegate?.currentStudent?.uniqueKey {
-                            print("%%%%% My Lupti Unique Key and the URL from the Parse Server is \(studentData["mediaURL"])  ")
-                            print("%% My Current MediaURL is \(self.applicationDelegate?.currentStudent?.mediaURL)")
-                        }
-                        print("^^^ getStudentFrom Server Student Data \(studentData)")
-                        */
                     }
                     if studentArray.count > 0 {
                         dispatch_async(dispatch_get_main_queue()){
                             
                             applicationDelegate.students = studentArray
-                            // assign students to the local students variable for the local scope
+                            // assign students to the local students variable for the local table view scope
                             self.students = studentArray
                             self.tableView.reloadData()
                             self.activityIndicator.stopAnimating()

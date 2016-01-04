@@ -49,7 +49,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     if studentArray.count > 0 {
                         dispatch_async(dispatch_get_main_queue()){
                             applicationDelegate.students = studentArray
-                            // This is a critical step to repopulate or refreesh the entire physical mapView's annotations
+                            // This is a critical step to repopulate or refreash the entire physical mapView's annotations
                             if self.mapView.annotations.count > 0 {
                                 self.mapView.removeAnnotations(self.mapView.annotations)
                                 self.addAnnotationsToMap()
@@ -131,6 +131,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         applicationDelegate?.students = nil
         applicationDelegate?.currentStudent = nil
         self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil )
+        let udacityClient = UdacityClient.sharedInstance
+        udacityClient.logoutSession()
     }
     
     //MARK: - Helper Methods
