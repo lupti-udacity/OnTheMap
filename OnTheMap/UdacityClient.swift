@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FBSDKLoginKit
 
 class UdacityClient: NSObject {
     
@@ -17,15 +18,14 @@ class UdacityClient: NSObject {
         (data: [String: AnyObject]?, errorString: String?) -> Void
     let session: NSURLSession
     var currentSession: UdacitySession? //** Current user session struct
-    
-    
+
     override init() {
         session = NSURLSession.sharedSession()
         super.init()
     }
     
     // MARK: - API Request Methods
-    
+    // Standard Udacity Login with email and password credential.
     func loginWith(email: String, password: String, completionHandler: UdacityCompletionHandler) {
         
         let request = NSMutableURLRequest(URL: NSURL(string: UdacityClient.loginUrl)! )
@@ -58,13 +58,15 @@ class UdacityClient: NSObject {
     }
   
     func logoutSession() {
-        
         let request = NSMutableURLRequest(URL: NSURL(string: UdacityClient.loginUrl)! )
         request.HTTPMethod = "DELETE"
         var xsrfCookie: NSHTTPCookie? = nil
         let sharedCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
         for cookie in sharedCookieStorage.cookies! {
-            if cookie.name == "XSRF-TOKEN" { xsrfCookie = cookie }
+            if cookie.name == "XSRF-TOKEN" {
+                xsrfCookie = cookie
+                print("cookie found \(xsrfCookie)")
+            }
         }
         if let xsrfCookie = xsrfCookie {
             request.setValue(xsrfCookie.value, forHTTPHeaderField: "X-XSRF-TOKEN")
@@ -85,8 +87,7 @@ class UdacityClient: NSObject {
 
     
     //Facebook login with FB currentAccessToken
-    func loginWithFB(fbToken: String, completionHandler: UdacityCompletionHandler) {
-        
+    func loginWithFB(fbToken: String, completionHandler: UdacityCompletionHandler) {        
         let request = NSMutableURLRequest(URL: NSURL(string: UdacityClient.loginUrl)! )
         request.HTTPMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
@@ -111,8 +112,6 @@ class UdacityClient: NSObject {
             print(NSString(data: newData, encoding: NSUTF8StringEncoding))
             
             self.parseLoginRequest(data: newData, completionHandler: completionHandler)
-            
-            
         }
         task.resume()
     }

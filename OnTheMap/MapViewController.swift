@@ -20,15 +20,31 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var toolbar: UIToolbar!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var mapView: MKMapView!
+    
     var uniqueKey: String?
     var applicationDelegate: AppDelegate?
+    let locationManager = CLLocationManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //ASK FOR AUTHORISATION FROM USER, Not recommended: privacy intrusion.
+        //self.locationManager.requestAlwaysAuthorization()
+        
+        //for useq in foreground
+        self.locationManager.requestWhenInUseAuthorization()
+        
+        if CLLocationManager.locationServicesEnabled(){
+            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            locationManager.startUpdatingLocation()
+            
+        
         applicationDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
         uniqueKey = applicationDelegate?.currentStudent?.uniqueKey
         activityIndicator.hidesWhenStopped = true
-        mapView.delegate = self
+        }
+        
+        self.mapView.delegate = self
     }
     
     override func viewDidAppear(animated: Bool) {

@@ -16,9 +16,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
+    // Not sure the BorderedButton makes the butten appears better?
     @IBOutlet weak var loginUdacityButton: BorderedButton!
 
-    
+    // Make sure this activityIndicator is on the bottom of the view item list in order to show it on top of the other view items.
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     @IBOutlet weak var fbLoginButton: FBSDKLoginButton!
@@ -74,23 +75,24 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
         guard result.token != nil else {
             return
         }
+        
         print("Token is \(FBSDKAccessToken.currentAccessToken().tokenString)")
         print("User ID is \(FBSDKAccessToken.currentAccessToken().userID)")
         print("App ID is \(FBSDKAccessToken.currentAccessToken().appID)")
-        
-        // displayNextView("ProtectedPageViewController")
+       
+        // Login to Udacity using FB token recieved here.
         if let udacityClient = udacityClient {
             udacityClient.loginWithFB(FBSDKAccessToken.currentAccessToken().tokenString) {
-            data, error in
-                print("**** Data FB is \(data)")
-                if data != nil {
-                    if let _ = self.applicationDelegate{
-                        if self.applicationDelegate != nil {
-                            self.applicationDelegate?.currentStudent =
+                data, error in
+                    print("**** Data FB is \(data)")
+                    if data != nil {
+                        if let _ = self.applicationDelegate{
+                            if self.applicationDelegate != nil {
+                                self.applicationDelegate?.currentStudent =
                                 Student(dictionary: data!)
-                            print("*** 1ST step Login data is \(data)")
-                            self.getPublicData()
-                        }else{ self.showError("Error", message: "Unable to login 1") }
+                                print("*** 1ST step Login data is \(data)")
+                                self.getPublicData()
+                            }else{ self.showError("Error", message: "Unable to login 1") }
                     } else { self.showError("Error", message: "Unable to login 2") }
                 } else {
                     self.showError("Error", message: "Unable to login 3")
