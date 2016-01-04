@@ -91,7 +91,7 @@ class UdacityClient: NSObject {
         request.HTTPMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.HTTPBody = "{\"facebook_mobile\": {\"access_token\": \"(fbToken)\"}}".dataUsingEncoding(NSUTF8StringEncoding)
+        request.HTTPBody = "{\"facebook_mobile\": {\"access_token\": \"\(fbToken)\"}}".dataUsingEncoding(NSUTF8StringEncoding)
         
         let task = session.dataTaskWithRequest(request) {(data, response, error) in
             // Interesting: No let is needed!!!
@@ -101,11 +101,6 @@ class UdacityClient: NSObject {
                 completionHandler(data: nil, errorString: error!.localizedDescription)
                 return
             }
-            /*  if let error = error  {
-            completionHandler(data: nil, errorString: error.localizedDescription)
-            return
-            }
-            */
             print("*** Pass the Error and ready to show the data")
             guard data != nil else {
                 completionHandler(data: nil, errorString: "Login Error: Unable to retrieve data")
@@ -189,7 +184,7 @@ class UdacityClient: NSObject {
         do{
             let parsedData =
             try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as? NSDictionary
-            print("* Udacity student data parseStudentDataRequest is \(parsedData)")
+            
             guard let data = parsedData!["user"] as? [String: AnyObject] else{
                 completionHandler(data: nil, errorString: "Unable to get user data")
                 return
