@@ -76,30 +76,24 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
         guard result.token != nil else {
             return
         }
-        
-        print("Token is \(FBSDKAccessToken.currentAccessToken().tokenString)")
-        print("User ID is \(FBSDKAccessToken.currentAccessToken().userID)")
-        print("App ID is \(FBSDKAccessToken.currentAccessToken().appID)")
        
         // Login to Udacity using FB token recieved here.
         if let udacityClient = udacityClient {
             udacityClient.loginWithFB(FBSDKAccessToken.currentAccessToken().tokenString) {
                 data, error in
-                    print("**** Data FB is \(data)")
                     if data != nil {
                         if let _ = self.applicationDelegate{
                             if self.applicationDelegate != nil {
                                 self.applicationDelegate?.currentStudent =
                                 Student(dictionary: data!)
-                                print("*** 1ST step Login data is \(data)")
                                 self.getPublicData()
-                            }else{ self.showError("Error", message: "Unable to login 1") }
-                    } else { self.showError("Error", message: "Unable to login 2") }
+                            }else{ self.showError("Error", message: "System internal error 1") }
+                    } else { self.showError("Error", message: "System internal error 2") }
                 } else {
-                    self.showError("Error", message: "Unable to login 3")
+                    self.showError("Error", message: "Facebook credential error")
                 }
             }
-        } else { showError("Error", message: "Unable to login 4") }
+        } else { showError("Error", message: "System internall error 3") }
     }
 
     /* Another Required FB loginButtonDidLogOut function holder */
@@ -116,24 +110,23 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
         if let udacityClient = udacityClient {
             udacityClient.loginWith(emailTextField.text!, password: passwordTextField.text!){
                 data, error in
-                
-                /* 
-                    Get the login student "UdacitySession" from the callback data
-                */
+                guard error == nil else {
+                    self.showError("Error", message: error)
+                    return
+                }
                 if data != nil {
                     if let _ = self.applicationDelegate{
                         if self.applicationDelegate != nil {
                             self.applicationDelegate?.currentStudent =
                                 Student(dictionary: data!)
-                            print("*** 1ST step Login data is \(data)")
                             self.getPublicData()
-                        }else{ self.showError("Error", message: "Unable to login") }
-                    } else { self.showError("Error", message: "Unable to login") }
+                        }else{ self.showError("Error", message: "System internal error 1") }
+                    } else { self.showError("Error", message: "System internal error 2.") }
                 } else {
-                    self.showError("Error", message: "Unable to login")
+                    self.showError("Error", message: "Incorrect Email or Password. Please try again!")
                 }
             }
-        } else { showError("Error", message: "Unable to login") }
+        } else { showError("Error", message: "System internal error 3") }
     }
     
     func getPublicData(){

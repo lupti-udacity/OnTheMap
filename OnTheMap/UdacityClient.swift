@@ -42,12 +42,6 @@ class UdacityClient: NSObject {
                 completionHandler(data: nil, errorString: error!.localizedDescription)
                 return
             }
-            /*  if let error = error  {
-                completionHandler(data: nil, errorString: error.localizedDescription)
-                return
-            }
-            */
-            
             guard data != nil else {
                 completionHandler(data: nil, errorString: "Login Error: Unable to retrieve data")
                 return
@@ -210,4 +204,5 @@ class UdacityClient: NSObject {
         }
     }
     
+
 }
