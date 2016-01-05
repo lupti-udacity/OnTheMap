@@ -36,7 +36,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
    
     var udacityClient: UdacityClient?
     var applicationDelegate: AppDelegate?
-
+    var fbLoginManager: FBSDKLoginManager?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,6 +62,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
         
         fbLoginButton.delegate = self
         fbLoginButton.readPermissions = ["public_profile", "email", "user_friends"]
+        fbLoginManager?.logOut()
     }
     
     /* Absoultely required FB loginButton function*/
@@ -106,7 +107,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
         /* This function is required by the FBSDKLogin but not necessary implement here. */
         print("FB loginButtonDidLogOut(fbLoginButton: FBSDKLoginButton!)")
         print("*** User Did Logout!")
-        
     }
 
     // Udacity login
@@ -137,9 +137,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
     }
     
     func getPublicData(){
-        if let applicationDelegate = applicationDelegate{
+        dispatch_async(dispatch_get_main_queue()){
+        if let applicationDelegate = self.applicationDelegate{
             if let key = applicationDelegate.currentStudent?.uniqueKey{
-                udacityClient?.getStudentDataWith(key){
+                self.udacityClient?.getStudentDataWith(key){
                     data, errorString in
                     if let data = data {
                         print("**** 2nd step getStudentDataWith Unique Key is \(data)")
@@ -157,8 +158,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
                         self.showError("Error", message: errorString!)
                     }
                 }
-            } else { showError("Error", message: "Unable to access key") }
-        } else { showError("Error", message: "Unable to accessing application") }
+            } else { self.showError("Error", message: "Unable to access key") }
+        } else { self.showError("Error", message: "Unable to accessing application") }
+        }
     }
    
     // Udacity loginButton did pressed
@@ -189,14 +191,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
     }
     
     func transitionToMap() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let tabController = storyboard.instantiateViewControllerWithIdentifier("TabController") as? UITabBarController
-        if let tabController = tabController{
-            presentViewController(tabController, animated: true, completion: nil)
-        } else {
-            showError("Error", message: "Unabel To Transition")
+        dispatch_async(dispatch_get_main_queue()){
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let tabController = storyboard.instantiateViewControllerWithIdentifier("TabController") as? UITabBarController
+            if let tabController = tabController{
+                self.presentViewController(tabController, animated: true, completion: nil)
+            } else {
+                self.showError("Error", message: "Unabel To Transition")
+            }
         }
-        
     }
     
     //MARK: - User Interface

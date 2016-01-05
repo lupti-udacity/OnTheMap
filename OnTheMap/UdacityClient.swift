@@ -18,6 +18,8 @@ class UdacityClient: NSObject {
         (data: [String: AnyObject]?, errorString: String?) -> Void
     let session: NSURLSession
     var currentSession: UdacitySession? //** Current user session struct
+    var fbLoginManager: FBSDKLoginManager?
+    
 
     override init() {
         session = NSURLSession.sharedSession()
@@ -58,6 +60,12 @@ class UdacityClient: NSObject {
     }
   
     func logoutSession() {
+        print("**** Logout Session is called")
+        // log out FB 
+        fbLoginManager = FBSDKLoginManager.init()
+        fbLoginManager?.logOut()
+        
+        // log out Udacity session with cookies.
         let request = NSMutableURLRequest(URL: NSURL(string: UdacityClient.loginUrl)! )
         request.HTTPMethod = "DELETE"
         var xsrfCookie: NSHTTPCookie? = nil
