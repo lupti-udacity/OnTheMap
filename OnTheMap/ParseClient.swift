@@ -19,6 +19,9 @@ class ParseClient: NSObject {
         (data: [[String: AnyObject]]?, errorString: String?) -> Void
     let session: NSURLSession
     
+    var students: [Student]?
+    var currentStudent: Student?
+    
     override init() {
         session = NSURLSession.sharedSession()
         super.init()

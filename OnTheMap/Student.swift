@@ -57,8 +57,4 @@ struct Student {
             return "\(firstName) \(lastName)"
         }
     }
-    /*
-    var students : [Student]? 
-var currentStudent: Student?
-    */
 }

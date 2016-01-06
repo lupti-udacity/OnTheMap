@@ -13,9 +13,6 @@ import FBSDKCoreKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
-    var currentStudent: Student? //** Current user logged in.
-    var students : [Student]? //** Array of students from Parse database
     var onTheMap : Bool?  //** If student loction is posted this is true
    
     // FBSDK requirements application(...)

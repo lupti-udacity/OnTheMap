@@ -25,6 +25,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     var applicationDelegate: AppDelegate?
     let locationManager = CLLocationManager()
     
+    var parseClient: ParseClient?
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -37,10 +40,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         if CLLocationManager.locationServicesEnabled(){
             locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
             locationManager.startUpdatingLocation()
-            
+        parseClient = ParseClient.sharedInstance
         
         applicationDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
-        uniqueKey = applicationDelegate?.currentStudent?.uniqueKey
+        uniqueKey = parseClient?.currentStudent?.uniqueKey
         activityIndicator.hidesWhenStopped = true
         }
         
@@ -57,14 +60,14 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         parseClient.getStudentsLocation(){ (students, errorString) in
             self.activityIndicator.startAnimating()
             if let students = students {
-                if let applicationDelegate = self.applicationDelegate{
+                if let _ = self.applicationDelegate{
                     var studentArray: [Student] = [Student]()
                     for studentData in students {
                         studentArray.append( Student(dictionary: studentData) )
                     }
                     if studentArray.count > 0 {
                         dispatch_async(dispatch_get_main_queue()){
-                            applicationDelegate.students = studentArray
+                            parseClient.students = studentArray
                             // This is a critical step to repopulate or refreash the entire physical mapView's annotations
                             if self.mapView.annotations.count > 0 {
                                 self.mapView.removeAnnotations(self.mapView.annotations)
@@ -89,7 +92,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     func addAnnotationsToMap() {
         dispatch_async(dispatch_get_main_queue()){
-            if let students = self.applicationDelegate?.students{
+            if let students = self.parseClient?.students{
                 var annotations = [MKAnnotation]()
                 for student in students {
                     if let lon = student.longitude,lat = student.latitude, first = student.firstName, last = student.lastName, media = student.mediaURL {
@@ -127,7 +130,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             student, errorString in
             if let student = student {
                 self.applicationDelegate?.onTheMap = true
-                self.applicationDelegate?.currentStudent = student
+                self.parseClient?.currentStudent = student
             } else {
                 self.applicationDelegate?.onTheMap = false
             }
@@ -144,8 +147,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     @IBAction func logoutPressed(sender: AnyObject) {
         let logoutController = presentingViewController as? LoginViewController
         logoutController?.passwordTextField.text = ""
-        applicationDelegate?.students = nil
-        applicationDelegate?.currentStudent = nil
+        parseClient?.students = nil
+        parseClient?.currentStudent = nil
         self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil )
         let udacityClient = UdacityClient.sharedInstance
         udacityClient.logoutSession()

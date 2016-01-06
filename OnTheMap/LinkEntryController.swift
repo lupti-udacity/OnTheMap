@@ -16,14 +16,17 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     var applicationDelegate: AppDelegate?
     var currentStudent:Student?
+    var parseClient: ParseClient?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        parseClient = ParseClient.sharedInstance
         linkTextField.delegate = self
         applicationDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
-        currentStudent = applicationDelegate?.currentStudent
+        currentStudent = parseClient?.currentStudent
         activityIndicator.hidesWhenStopped = true
         addAnnotationsToMap()
+        
     }
     
     func addAnnotationsToMap() {
@@ -54,7 +57,7 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
         self.activityIndicator.startAnimating()
         if let urlString = linkTextField.text{
             if verifyUrl(urlString){
-                applicationDelegate?.currentStudent?.mediaURL = "\(urlString)"
+                self.parseClient?.currentStudent?.mediaURL = "\(urlString)"
                 if let appDelegate = applicationDelegate{
                     if let overwrite = appDelegate.onTheMap{
                         if overwrite {
@@ -72,7 +75,7 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
     
     func overwriteLocationObject(){
         let parseClient = ParseClient.sharedInstance
-        parseClient.overwriteStudent(applicationDelegate?.currentStudent){
+        parseClient.overwriteStudent(self.parseClient?.currentStudent){
             (completed, errorString) in
             if completed == true {
                 self.activityIndicator.stopAnimating()
@@ -89,7 +92,7 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
     
     func addLocationObject(){
         let parseClient = ParseClient.sharedInstance
-        parseClient.postStudent(applicationDelegate?.currentStudent){
+        parseClient.postStudent(self.parseClient?.currentStudent){
             (completed, errorString) in
             if completed == true {
                 self.activityIndicator.stopAnimating()
