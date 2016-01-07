@@ -209,10 +209,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3dp-JZ-ON4">
-                                <rect key="frame" x="20" y="0.0" width="560" height="600"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
                                     <mapView opaque="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" pitchEnabled="NO" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CSE-7a-4pS">
-                                        <rect key="frame" x="0.0" y="60" width="560" height="540"/>
+                                        <rect key="frame" x="0.0" y="60" width="600" height="540"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="600" id="566-qw-kaH"/>
                                         </constraints>
@@ -223,7 +223,7 @@
                                         </variation>
                                     </mapView>
                                     <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="center" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UHc-FG-548">
-                                        <rect key="frame" x="0.0" y="0.0" width="560" height="60"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="60"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="60" id="kFP-Ik-kvv"/>
                                         </constraints>
@@ -261,7 +261,7 @@
                                 <constraints>
                                     <constraint firstItem="CSE-7a-4pS" firstAttribute="centerX" secondItem="3dp-JZ-ON4" secondAttribute="centerX" id="25e-6e-kxT"/>
                                     <constraint firstItem="UHc-FG-548" firstAttribute="top" secondItem="3dp-JZ-ON4" secondAttribute="top" id="CYl-oj-NCV"/>
-                                    <constraint firstItem="adc-NY-wiO" firstAttribute="centerX" secondItem="3dp-JZ-ON4" secondAttribute="centerX" id="IWZ-Fw-lxO"/>
+                                    <constraint firstItem="adc-NY-wiO" firstAttribute="centerX" secondItem="3dp-JZ-ON4" secondAttribute="centerX" constant="-19.5" id="IWZ-Fw-lxO"/>
                                     <constraint firstItem="CSE-7a-4pS" firstAttribute="top" secondItem="UHc-FG-548" secondAttribute="bottom" id="Jds-Yd-kDi"/>
                                     <constraint firstItem="CSE-7a-4pS" firstAttribute="trailing" secondItem="3dp-JZ-ON4" secondAttribute="trailing" id="Ram-JA-ct3"/>
                                     <constraint firstItem="adc-NY-wiO" firstAttribute="centerY" secondItem="3dp-JZ-ON4" secondAttribute="centerY" id="U4h-xS-HAG"/>
@@ -274,10 +274,10 @@
                         <constraints>
                             <constraint firstItem="3dp-JZ-ON4" firstAttribute="top" secondItem="hj2-IL-bpA" secondAttribute="top" id="5RW-9P-qix"/>
                             <constraint firstItem="3dp-JZ-ON4" firstAttribute="bottom" secondItem="hj2-IL-bpA" secondAttribute="bottomMargin" id="Sfa-et-sIv"/>
-                            <constraint firstItem="UHc-FG-548" firstAttribute="trailing" secondItem="hj2-IL-bpA" secondAttribute="trailingMargin" id="ZeZ-Ut-0Pn"/>
-                            <constraint firstItem="UHc-FG-548" firstAttribute="leading" secondItem="hj2-IL-bpA" secondAttribute="leadingMargin" id="c7K-RF-Fvm"/>
-                            <constraint firstItem="CSE-7a-4pS" firstAttribute="leading" secondItem="hj2-IL-bpA" secondAttribute="leadingMargin" id="jJH-3f-3xs"/>
-                            <constraint firstItem="CSE-7a-4pS" firstAttribute="trailing" secondItem="hj2-IL-bpA" secondAttribute="trailingMargin" id="tea-Pz-KL3"/>
+                            <constraint firstItem="UHc-FG-548" firstAttribute="trailing" secondItem="hj2-IL-bpA" secondAttribute="trailingMargin" constant="20" id="ZeZ-Ut-0Pn"/>
+                            <constraint firstItem="UHc-FG-548" firstAttribute="leading" secondItem="hj2-IL-bpA" secondAttribute="leadingMargin" constant="-20" id="c7K-RF-Fvm"/>
+                            <constraint firstItem="CSE-7a-4pS" firstAttribute="leading" secondItem="hj2-IL-bpA" secondAttribute="leadingMargin" constant="-20" id="jJH-3f-3xs"/>
+                            <constraint firstItem="CSE-7a-4pS" firstAttribute="trailing" secondItem="hj2-IL-bpA" secondAttribute="trailingMargin" constant="20" id="tea-Pz-KL3"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Map" image="map" id="PxG-bG-pD6"/>

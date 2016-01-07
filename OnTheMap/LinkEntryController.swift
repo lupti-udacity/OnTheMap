@@ -54,30 +54,33 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func submitButtonPressed(sender: AnyObject) {
-        dispatch_async(dispatch_get_main_queue()){
         self.activityIndicator.startAnimating()
         UIView.animateWithDuration(0.2, animations: {
             self.activityIndicator.color = UIColor.blueColor()
             self.activityIndicator.alpha = 1.0
         })
-
-        if let urlString = self.linkTextField.text{
-            if self.verifyUrl(urlString){
-                self.parseClient?.currentStudent?.mediaURL = "\(urlString)"
-                if let appDelegate = self.applicationDelegate{
-                    if let overwrite = appDelegate.onTheMap{
-                        if overwrite {
-                            //OVERWRITE
-                            self.overwriteLocationObject()
-                        } else if overwrite == false{
-                            //ADD NEW LOCATION OBJECT
-                            self.addLocationObject()
+        //dispatch_async(dispatch_get_main_queue()){
+            if let urlString = self.linkTextField.text{
+                if self.verifyUrl(urlString) == true {
+                    self.parseClient?.currentStudent?.mediaURL = "\(urlString)"
+                
+                    if let appDelegate = self.applicationDelegate{
+                        if let overwrite = appDelegate.onTheMap {
+                            if overwrite == true {
+                            
+                                self.overwriteLocationObject()
+                            } else {
+                                self.addLocationObject()
+                            }
+                        } else {
+                            self.showAlert("Error", message:"Internal error 2")
                         }
+                    } else {
+                        self.showAlert("Error", message:"Internal error 1")
                     }
                 }
-            } else { self.showAlert("Error", message:"Invalid link") }
-        } else { self.showAlert("Error", message:"TextField is empty") }
-        }
+                else { self.showAlert("Error", message:"Invalid link") }
+            } else { self.showAlert("Error", message:"TextField is empty") }
     }
     
     func overwriteLocationObject(){
@@ -85,7 +88,10 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
         parseClient.overwriteStudent(self.parseClient?.currentStudent){
             (completed, errorString) in
             if completed == true {
-                self.activityIndicator.stopAnimating()
+                if self.activityIndicator.isAnimating() {
+                    self.activityIndicator.stopAnimating()
+                }
+                print("overwriteLocationObject")
                 self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
             } else {
                 if let errorString = errorString {
@@ -102,7 +108,11 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
         parseClient.postStudent(self.parseClient?.currentStudent){
             (completed, errorString) in
             if completed == true {
-                self.activityIndicator.stopAnimating()
+                if self.activityIndicator.isAnimating() {
+                    print("activityIndicator is running")
+                    self.activityIndicator.stopAnimating()
+                }
+                print("activity Indicator is stopped \(self.activityIndicator.isAnimating())")
                 self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
             } else {
                 if let errorString = errorString {

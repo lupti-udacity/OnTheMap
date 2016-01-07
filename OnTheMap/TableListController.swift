@@ -207,10 +207,18 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
         {
             let app = UIApplication.sharedApplication()
             if let url = NSURL(string: urlString){
-                if app.canOpenURL(url){
-                    app.openURL(url)
+                guard app.canOpenURL(url) else {
+                    showAlert("Error", message: "Invalid URI resource scheme.")
+                    return
                 }
+                guard app.openURL(url) else {
+                        showAlert("URL: \(url)", message: "Inaccessible URI")
+                        return
+                    }
             }
+        } else {
+            showAlert("Error", message: "Inaccessible student record")
+            return
         }
     }
 

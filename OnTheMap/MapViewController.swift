@@ -36,13 +36,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
         //for useq in foreground
         //self.locationManager.requestWhenInUseAuthorization()
-        
+        print("*** View did load called???")
         if CLLocationManager.locationServicesEnabled(){
             locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
             locationManager.startUpdatingLocation()
             parseClient = ParseClient.sharedInstance
         
-            //applicationDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
+            applicationDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
             uniqueKey = parseClient?.currentStudent?.uniqueKey
             activityIndicator.hidesWhenStopped = true
         }
@@ -51,12 +51,11 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     override func viewDidAppear(animated: Bool) {
+        print("*** View Did Appear.")
         getStudentsFromServer()
     }
     
     func getStudentsFromServer() {
-        dispatch_async(dispatch_get_main_queue()){
-            
         self.activityIndicator.startAnimating()
         UIView.animateWithDuration(0.3, animations: {
             self.activityIndicator.color = UIColor.redColor()
@@ -73,7 +72,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                         studentArray.append( Student(dictionary: studentData) )
                     }
                     if studentArray.count > 0 {
-                      //dispatch_async(dispatch_get_main_queue()){
+                      dispatch_async(dispatch_get_main_queue()){
                             parseClient.students = studentArray
                             // This is a critical step to repopulate or refreash the entire physical mapView's annotations
                             if self.mapView.annotations.count > 0 {
@@ -83,7 +82,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                                 self.addAnnotationsToMap()
                             }
                             self.activityIndicator.stopAnimating()
-                        //}
+                        }
                         
                     } else { self.stopActivityIndicator() }
                 } else { self.showAlert("Error", message: "Unable to access App Delegate") }
@@ -93,7 +92,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 } else {
                     self.showAlert("Error", message: "Unable to retrieve data")
                 }
-            }
             }
         }
     }
@@ -132,7 +130,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
 
     @IBAction func addPinPressed(sender: AnyObject) {
-    
+        print("Add Pin Pressed")
+        if self.activityIndicator.isAnimating() {
+            self.activityIndicator.stopAnimating()
+        }
         let parseClient = ParseClient.sharedInstance
         parseClient.queryForStudent(uniqueKey!){
             student, errorString in

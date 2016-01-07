@@ -116,7 +116,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
             udacityClient.loginWith(emailTextField.text!, password: passwordTextField.text!){
                 data, error in
                 guard error == nil else {
-                    self.showError("Error", message: error)
+                    self.showError("Error", message: error! + " OR Invalid User ID and Password. Please Try Agin!")
                     return
                 }
                 if data != nil {
