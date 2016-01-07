@@ -209,12 +209,22 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3dp-JZ-ON4">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="598"/>
+                                <rect key="frame" x="20" y="0.0" width="560" height="600"/>
                                 <subviews>
-                                    <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UHc-FG-548">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="60"/>
+                                    <mapView opaque="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" pitchEnabled="NO" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CSE-7a-4pS">
+                                        <rect key="frame" x="0.0" y="60" width="560" height="540"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="600" id="QTl-vN-vrR"/>
+                                            <constraint firstAttribute="width" constant="600" id="566-qw-kaH"/>
+                                        </constraints>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="566-qw-kaH"/>
+                                            </mask>
+                                        </variation>
+                                    </mapView>
+                                    <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="center" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UHc-FG-548">
+                                        <rect key="frame" x="0.0" y="0.0" width="560" height="60"/>
+                                        <constraints>
                                             <constraint firstAttribute="height" constant="60" id="kFP-Ik-kvv"/>
                                         </constraints>
                                         <items>
@@ -241,44 +251,33 @@
                                                 </connections>
                                             </barButtonItem>
                                         </items>
-                                        <variation key="default">
-                                            <mask key="constraints">
-                                                <exclude reference="QTl-vN-vrR"/>
-                                            </mask>
-                                        </variation>
                                     </toolbar>
-                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="adc-NY-wiO">
-                                        <rect key="frame" x="282" y="237" width="37" height="37"/>
+                                    <activityIndicatorView opaque="NO" alpha="0.5" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="adc-NY-wiO">
+                                        <rect key="frame" x="262" y="282" width="37" height="37"/>
                                         <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     </activityIndicatorView>
-                                    <mapView opaque="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" pitchEnabled="NO" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CSE-7a-4pS">
-                                        <rect key="frame" x="0.0" y="60" width="600" height="539"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="600" id="566-qw-kaH"/>
-                                            <constraint firstAttribute="height" constant="539" id="qxt-in-4yA"/>
-                                        </constraints>
-                                    </mapView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="adc-NY-wiO" firstAttribute="centerX" secondItem="CSE-7a-4pS" secondAttribute="centerX" id="ByI-sW-HNE"/>
+                                    <constraint firstItem="CSE-7a-4pS" firstAttribute="centerX" secondItem="3dp-JZ-ON4" secondAttribute="centerX" id="25e-6e-kxT"/>
                                     <constraint firstItem="UHc-FG-548" firstAttribute="top" secondItem="3dp-JZ-ON4" secondAttribute="top" id="CYl-oj-NCV"/>
-                                    <constraint firstItem="UHc-FG-548" firstAttribute="centerX" secondItem="3dp-JZ-ON4" secondAttribute="centerX" id="J5U-3i-JXi"/>
+                                    <constraint firstItem="adc-NY-wiO" firstAttribute="centerX" secondItem="3dp-JZ-ON4" secondAttribute="centerX" id="IWZ-Fw-lxO"/>
                                     <constraint firstItem="CSE-7a-4pS" firstAttribute="top" secondItem="UHc-FG-548" secondAttribute="bottom" id="Jds-Yd-kDi"/>
-                                    <constraint firstItem="CSE-7a-4pS" firstAttribute="leading" secondItem="UHc-FG-548" secondAttribute="leading" id="KD7-aT-4qY"/>
-                                    <constraint firstItem="CSE-7a-4pS" firstAttribute="centerY" secondItem="adc-NY-wiO" secondAttribute="centerY" constant="74" id="Mck-p8-Zdb"/>
-                                    <constraint firstAttribute="trailing" secondItem="CSE-7a-4pS" secondAttribute="trailing" id="Ram-JA-ct3"/>
-                                    <constraint firstItem="adc-NY-wiO" firstAttribute="centerY" secondItem="3dp-JZ-ON4" secondAttribute="centerY" constant="-43.5" id="U4h-xS-HAG"/>
+                                    <constraint firstItem="CSE-7a-4pS" firstAttribute="trailing" secondItem="3dp-JZ-ON4" secondAttribute="trailing" id="Ram-JA-ct3"/>
+                                    <constraint firstItem="adc-NY-wiO" firstAttribute="centerY" secondItem="3dp-JZ-ON4" secondAttribute="centerY" id="U4h-xS-HAG"/>
                                     <constraint firstItem="CSE-7a-4pS" firstAttribute="leading" secondItem="3dp-JZ-ON4" secondAttribute="leading" id="XSO-9e-fVU"/>
-                                    <constraint firstItem="CSE-7a-4pS" firstAttribute="trailing" secondItem="UHc-FG-548" secondAttribute="trailing" id="ljH-OA-fXl"/>
+                                    <constraint firstItem="CSE-7a-4pS" firstAttribute="bottomMargin" secondItem="3dp-JZ-ON4" secondAttribute="bottom" id="doS-bO-iEP"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="3dp-JZ-ON4" firstAttribute="top" secondItem="hj2-IL-bpA" secondAttribute="top" id="5RW-9P-qix"/>
-                            <constraint firstItem="3dp-JZ-ON4" firstAttribute="leading" secondItem="hj2-IL-bpA" secondAttribute="leading" id="Oq9-Ui-KKe"/>
-                            <constraint firstItem="CSE-7a-4pS" firstAttribute="centerX" secondItem="hj2-IL-bpA" secondAttribute="centerX" id="h7f-6x-L4v"/>
+                            <constraint firstItem="3dp-JZ-ON4" firstAttribute="bottom" secondItem="hj2-IL-bpA" secondAttribute="bottomMargin" id="Sfa-et-sIv"/>
+                            <constraint firstItem="UHc-FG-548" firstAttribute="trailing" secondItem="hj2-IL-bpA" secondAttribute="trailingMargin" id="ZeZ-Ut-0Pn"/>
+                            <constraint firstItem="UHc-FG-548" firstAttribute="leading" secondItem="hj2-IL-bpA" secondAttribute="leadingMargin" id="c7K-RF-Fvm"/>
+                            <constraint firstItem="CSE-7a-4pS" firstAttribute="leading" secondItem="hj2-IL-bpA" secondAttribute="leadingMargin" id="jJH-3f-3xs"/>
+                            <constraint firstItem="CSE-7a-4pS" firstAttribute="trailing" secondItem="hj2-IL-bpA" secondAttribute="trailingMargin" id="tea-Pz-KL3"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Map" image="map" id="PxG-bG-pD6"/>

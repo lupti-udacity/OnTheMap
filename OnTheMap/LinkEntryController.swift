@@ -54,11 +54,17 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func submitButtonPressed(sender: AnyObject) {
+        dispatch_async(dispatch_get_main_queue()){
         self.activityIndicator.startAnimating()
-        if let urlString = linkTextField.text{
-            if verifyUrl(urlString){
+        UIView.animateWithDuration(0.2, animations: {
+            self.activityIndicator.color = UIColor.blueColor()
+            self.activityIndicator.alpha = 1.0
+        })
+
+        if let urlString = self.linkTextField.text{
+            if self.verifyUrl(urlString){
                 self.parseClient?.currentStudent?.mediaURL = "\(urlString)"
-                if let appDelegate = applicationDelegate{
+                if let appDelegate = self.applicationDelegate{
                     if let overwrite = appDelegate.onTheMap{
                         if overwrite {
                             //OVERWRITE
@@ -71,6 +77,7 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
                 }
             } else { self.showAlert("Error", message:"Invalid link") }
         } else { self.showAlert("Error", message:"TextField is empty") }
+        }
     }
     
     func overwriteLocationObject(){

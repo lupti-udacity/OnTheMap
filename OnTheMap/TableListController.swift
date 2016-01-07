@@ -27,7 +27,7 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
     @IBOutlet weak var toolBar: UIToolbar!
     
     @IBAction func logoutPressed(sender: AnyObject) {
-        activityIndicator.startAnimating()
+        //activityIndicator.startAnimating()
         let logoutController = presentingViewController as? LoginViewController
         logoutController?.passwordTextField.text = ""
         parseClient?.students = nil
@@ -99,9 +99,14 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
     func getStudentsFromServer() {
         
         let parseClient = ParseClient.sharedInstance
-                
+        self.activityIndicator.startAnimating()
+        UIView.animateWithDuration(0.4, animations: {
+            self.activityIndicator.color = UIColor.blueColor()
+            self.activityIndicator.alpha = 1.0
+        })
+        
         parseClient.getStudentsLocation(){ (students, errorString) in
-            self.activityIndicator.startAnimating()
+            
             if let students = students {
                 if let _ = self.applicationDelegate{
                     var studentArray: [Student] = [Student]()
@@ -142,6 +147,7 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
         applicationDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
         students = parseClient?.students
         uniqueKey = parseClient?.currentStudent?.uniqueKey
+        activityIndicator.hidesWhenStopped = true
     }
     
     override func viewDidAppear(animated: Bool) {
