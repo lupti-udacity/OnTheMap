@@ -73,12 +73,6 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
     
     //MARK: - Helper Methods
     
-    func stopActivityIndicator() {
-        dispatch_async(dispatch_get_main_queue()){
-            self.activityIndicator.stopAnimating()
-        }
-    }
-    
     func signUpForNotifications() {
         let center: NSNotificationCenter = NSNotificationCenter.defaultCenter()
         center.addObserver(self, selector: "keyboardDidShow:", name:

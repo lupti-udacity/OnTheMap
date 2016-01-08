@@ -82,7 +82,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                             self.activityIndicator.stopAnimating()
                         }
                         
-                    } else { self.stopActivityIndicator() }
+                    } else { self.activityIndicator.stopAnimating() }
                 } else { self.showAlert("Error", message: "Unable to access App Delegate") }
             }else {
                 if let errorString = errorString {
@@ -187,12 +187,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 }))
                 self.presentViewController(alert, animated: true, completion: nil)
             }
-        }
-    }
-    
-    func stopActivityIndicator() {
-        dispatch_async(dispatch_get_main_queue()){
-            self.activityIndicator.stopAnimating()
         }
     }
     
