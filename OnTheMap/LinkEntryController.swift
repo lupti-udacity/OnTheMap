@@ -31,6 +31,23 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
     
     func addAnnotationsToMap() {
         dispatch_async(dispatch_get_main_queue()){
+            
+            guard let student = self.currentStudent, lon = student.longitude, lat = student.latitude else {
+                self.showAlert("Error", message: "Unable to get student data")
+                return
+            }
+            let lad = CLLocationDegrees(Double((lat)))
+            let long = CLLocationDegrees(Double((lon)))
+            let coordinate = CLLocationCoordinate2D(latitude: lad, longitude: long)
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = coordinate
+            self.mapView.addAnnotation(annotation)
+            let cammera =
+            MKMapCamera(lookingAtCenterCoordinate: coordinate, fromEyeCoordinate: coordinate, eyeAltitude: 10000.0)
+            self.mapView.setCamera(cammera, animated: true)
+
+            /*
+            
             if let student = self.currentStudent, lon = student.longitude, lat = student.latitude{
                 let lat = CLLocationDegrees(Double((lat)))
                 let long = CLLocationDegrees(Double((lon)))
@@ -44,6 +61,7 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
             } else {
                 self.showAlert("Error", message: "Unable to get student data")
             }
+            */
         }
     }
     
@@ -59,8 +77,33 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
             self.activityIndicator.color = UIColor.blueColor()
             self.activityIndicator.alpha = 1.0
         })
-        //dispatch_async(dispatch_get_main_queue()){
-            if let urlString = self.linkTextField.text{
+        
+        guard let urlString = self.linkTextField.text else{
+            showAlert("Error", message:"TextField is empty")
+            return
+        }
+        guard self.verifyUrl(urlString) else {
+            self.showAlert("Error", message:"Invalid link")
+            return
+        }
+        self.parseClient?.currentStudent?.mediaURL = "\(urlString)"
+        
+        guard let appDelegate = self.applicationDelegate else {
+            self.showAlert("Error", message:"Internal error 1")
+            return
+        }
+        guard let overwrite = appDelegate.onTheMap else {
+            self.showAlert("Error", message:"Internal error 2")
+            return
+        }
+        guard overwrite == true else {
+            self.addLocationObject()
+            return
+        }
+        self.overwriteLocationObject()
+        return
+        
+        /*  if let urlString = self.linkTextField.text{
                 if self.verifyUrl(urlString) == true {
                     self.parseClient?.currentStudent?.mediaURL = "\(urlString)"
                 
@@ -81,12 +124,25 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
                 }
                 else { self.showAlert("Error", message:"Invalid link") }
             } else { self.showAlert("Error", message:"TextField is empty") }
+        */
     }
     
     func overwriteLocationObject(){
         let parseClient = ParseClient.sharedInstance
         parseClient.overwriteStudent(self.parseClient?.currentStudent){
             (completed, errorString) in
+            
+            guard completed == true else {
+                self.showAlert("Error", message: errorString)
+                return
+            }
+            if self.activityIndicator.isAnimating() {
+                self.activityIndicator.stopAnimating()
+            }
+            print("overwriteLocationObject")
+            self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+  
+           /*
             if completed == true {
                 if self.activityIndicator.isAnimating() {
                     self.activityIndicator.stopAnimating()
@@ -99,7 +155,7 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
                 }else {
                     self.showAlert("Error", message:"Unable to sumbit student data")
                 }
-            }
+            }*/
         }
     }
     
@@ -107,6 +163,20 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
         let parseClient = ParseClient.sharedInstance
         parseClient.postStudent(self.parseClient?.currentStudent){
             (completed, errorString) in
+            guard completed == true else {
+                self.showAlert("Error", message: errorString)
+                return
+            }
+            if self.activityIndicator.isAnimating() {
+                print("activityIndicator is running")
+                self.activityIndicator.stopAnimating()
+            }
+            print("activity Indicator is stopped \(self.activityIndicator.isAnimating())")
+            self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+            
+            
+            
+ /*
             if completed == true {
                 if self.activityIndicator.isAnimating() {
                     print("activityIndicator is running")
@@ -120,7 +190,7 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
                 }else {
                     self.showAlert("Error", message:"Unable to sumbit student data")
                 }
-            }
+            }*/
         }
     }
     

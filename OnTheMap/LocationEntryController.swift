@@ -42,7 +42,34 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
                 self.showAlert("ERROR", message: error.localizedDescription)
                 return
             }
-            //self.activityIndicator.startAnimating()
+
+            guard let _ = self.applicationDelegate, placemark = placemark else {
+                self.showAlert("ERROR", message: "Unable to find location")
+                return
+            }
+            guard placemark.count > 0 else {
+                self.showAlert("ERROR", message:"Unable to find location")
+                return
+            }
+            let placemark1 = placemark.first!
+            guard let country = placemark1.country, state = placemark1.administrativeArea else {
+                self.showAlert("ERROR", message:"Be more specific in location")
+                return
+            }
+            guard let city = placemark1.locality else {
+                self.parseClient!.currentStudent?.mapString = "\(state), \(country)"
+                self.parseClient!.currentStudent?.latitude = (placemark1.location!.coordinate.latitude)
+                self.parseClient!.currentStudent?.longitude = (placemark1.location!.coordinate.longitude)
+                self.presentViewWith(self.parseClient!.currentStudent?.mapString,lat: nil,lon: nil)
+                return
+                
+            }
+            self.parseClient!.currentStudent?.mapString = "\(city), \(state), \(country)"
+            self.parseClient!.currentStudent?.latitude = (placemark1.location!.coordinate.latitude)
+            self.parseClient!.currentStudent?.longitude = (placemark1.location!.coordinate.longitude)
+            self.presentViewWith(self.parseClient!.currentStudent?.mapString,lat: self.parseClient!.currentStudent?.latitude,lon: self.parseClient!.currentStudent?.longitude)
+            
+            /*
             if let _ = self.applicationDelegate, placemark = placemark{
                 if placemark.count > 0 {
                     let placemark = placemark.first!
@@ -68,7 +95,7 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
                 }
             } else {
                 self.showAlert("ERROR", message: "Unable to find location")
-            }
+            } */
         }
     }
     
