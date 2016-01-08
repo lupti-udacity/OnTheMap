@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "OnTheMap/LinkEntryController.swift"
-            timestampString = "473908395.270666"
+            timestampString = "473910886.705974"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "214"
-            endingLineNumber = "214"
+            startingLineNumber = "145"
+            endingLineNumber = "145"
             landmarkName = "showAlert(_:message:)"
             landmarkType = "5">
          </BreakpointContent>

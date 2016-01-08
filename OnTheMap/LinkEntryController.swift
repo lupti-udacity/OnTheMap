@@ -46,22 +46,6 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
             MKMapCamera(lookingAtCenterCoordinate: coordinate, fromEyeCoordinate: coordinate, eyeAltitude: 10000.0)
             self.mapView.setCamera(cammera, animated: true)
 
-            /*
-            
-            if let student = self.currentStudent, lon = student.longitude, lat = student.latitude{
-                let lat = CLLocationDegrees(Double((lat)))
-                let long = CLLocationDegrees(Double((lon)))
-                let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
-                let annotation = MKPointAnnotation()
-                annotation.coordinate = coordinate
-                self.mapView.addAnnotation(annotation)
-                let cammera =
-                MKMapCamera(lookingAtCenterCoordinate: coordinate, fromEyeCoordinate: coordinate, eyeAltitude: 10000.0)
-                self.mapView.setCamera(cammera, animated: true)
-            } else {
-                self.showAlert("Error", message: "Unable to get student data")
-            }
-            */
         }
     }
     
@@ -103,28 +87,6 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
         self.overwriteLocationObject()
         return
         
-        /*  if let urlString = self.linkTextField.text{
-                if self.verifyUrl(urlString) == true {
-                    self.parseClient?.currentStudent?.mediaURL = "\(urlString)"
-                
-                    if let appDelegate = self.applicationDelegate{
-                        if let overwrite = appDelegate.onTheMap {
-                            if overwrite == true {
-                            
-                                self.overwriteLocationObject()
-                            } else {
-                                self.addLocationObject()
-                            }
-                        } else {
-                            self.showAlert("Error", message:"Internal error 2")
-                        }
-                    } else {
-                        self.showAlert("Error", message:"Internal error 1")
-                    }
-                }
-                else { self.showAlert("Error", message:"Invalid link") }
-            } else { self.showAlert("Error", message:"TextField is empty") }
-        */
     }
     
     func overwriteLocationObject(){
@@ -142,20 +104,6 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
             print("overwriteLocationObject")
             self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
   
-           /*
-            if completed == true {
-                if self.activityIndicator.isAnimating() {
-                    self.activityIndicator.stopAnimating()
-                }
-                print("overwriteLocationObject")
-                self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
-            } else {
-                if let errorString = errorString {
-                    self.showAlert("Error", message: errorString)
-                }else {
-                    self.showAlert("Error", message:"Unable to sumbit student data")
-                }
-            }*/
         }
     }
     
@@ -174,23 +122,6 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
             print("activity Indicator is stopped \(self.activityIndicator.isAnimating())")
             self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
             
-            
-            
- /*
-            if completed == true {
-                if self.activityIndicator.isAnimating() {
-                    print("activityIndicator is running")
-                    self.activityIndicator.stopAnimating()
-                }
-                print("activity Indicator is stopped \(self.activityIndicator.isAnimating())")
-                self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
-            } else {
-                if let errorString = errorString {
-                    self.showAlert("Error", message: errorString)
-                }else {
-                    self.showAlert("Error", message:"Unable to sumbit student data")
-                }
-            }*/
         }
     }
     

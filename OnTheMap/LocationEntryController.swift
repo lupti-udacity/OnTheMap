@@ -68,34 +68,6 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
             self.parseClient!.currentStudent?.latitude = (placemark1.location!.coordinate.latitude)
             self.parseClient!.currentStudent?.longitude = (placemark1.location!.coordinate.longitude)
             self.presentViewWith(self.parseClient!.currentStudent?.mapString,lat: self.parseClient!.currentStudent?.latitude,lon: self.parseClient!.currentStudent?.longitude)
-            
-            /*
-            if let _ = self.applicationDelegate, placemark = placemark{
-                if placemark.count > 0 {
-                    let placemark = placemark.first!
-                    if let country = placemark.country, state = placemark.administrativeArea{
-                        if let city = placemark.locality{
-                            self.parseClient!.currentStudent?.mapString = "\(city), \(state), \(country)"
-                            self.parseClient!.currentStudent?.latitude = (placemark.location!.coordinate.latitude)
-                            self.parseClient!.currentStudent?.longitude = (placemark.location!.coordinate.longitude)
-                            self.presentViewWith(self.parseClient!.currentStudent?.mapString,lat: self.parseClient!.currentStudent?.latitude,lon: self.parseClient!.currentStudent?.longitude)
-                            //self.stopActivityIndicator()
-                        }else {
-                            self.parseClient!.currentStudent?.mapString = "\(state), \(country)"
-                            self.parseClient!.currentStudent?.latitude = (placemark.location!.coordinate.latitude)
-                            self.parseClient!.currentStudent?.longitude = (placemark.location!.coordinate.longitude)
-                            self.presentViewWith(self.parseClient!.currentStudent?.mapString,lat: nil,lon: nil)
-                            //self.stopActivityIndicator()
-                        }
-                    } else {
-                        self.showAlert("ERROR", message:"Be more specific in location")
-                    }
-                } else {
-                    self.showAlert("ERROR", message:"Unable to find location")
-                }
-            } else {
-                self.showAlert("ERROR", message: "Unable to find location")
-            } */
         }
     }
     

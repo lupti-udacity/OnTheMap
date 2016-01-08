@@ -38,13 +38,10 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
     }
 
     @IBAction func refresh(sender: AnyObject) {
-        print("Refresh from the server")
         getStudentsFromServer()
     }
     
     @IBAction func addPinPressed(sender: AnyObject) {
-        print("addPinPressed")
-    
         //let parseClient = ParseClient.sharedInstance
         self.parseClient!.queryForStudent(uniqueKey!){
             student, errorString in

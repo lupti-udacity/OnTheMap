@@ -36,7 +36,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
         //for useq in foreground
         //self.locationManager.requestWhenInUseAuthorization()
-        print("*** View did load called???")
         if CLLocationManager.locationServicesEnabled(){
             locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
             locationManager.startUpdatingLocation()
@@ -51,7 +50,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     override func viewDidAppear(animated: Bool) {
-        print("*** View Did Appear.")
         getStudentsFromServer()
     }
     
@@ -130,7 +128,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
 
     @IBAction func addPinPressed(sender: AnyObject) {
-        print("Add Pin Pressed")
         if self.activityIndicator.isAnimating() {
             self.activityIndicator.stopAnimating()
         }
