@@ -18,7 +18,7 @@ import UIKit
 class TableListController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     var applicationDelegate: AppDelegate?
-    var students: [Student]?
+    //var students: [Student]?
     var uniqueKey: String?
     var parseClient: ParseClient?
    
@@ -106,17 +106,18 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
             
             if let students = students {
                 if let _ = self.applicationDelegate{
-                    var studentArray: [Student] = [Student]()
+                    parseClient.studentArray = [Student]()
+                    //var studentArray: [Student] = [Student]()
                     for studentData in students {
                         
-                        studentArray.append( Student(dictionary: studentData) )
+                        parseClient.studentArray?.append( Student(dictionary: studentData) )
                     }
-                    if studentArray.count > 0 {
+                    if parseClient.studentArray!.count > 0 {
                         dispatch_async(dispatch_get_main_queue()){
                             
-                            parseClient.students = studentArray
+                            parseClient.students = parseClient.studentArray
                             // assign students to the local students variable for the local table view scope
-                            self.students = studentArray
+                            //self.students = parseClient.studentArray
                             self.tableView.reloadData()
                             self.activityIndicator.stopAnimating()
                         }
@@ -142,7 +143,7 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
         parseClient = ParseClient.sharedInstance
         getStudentsFromServer()
         applicationDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
-        students = parseClient?.students
+        //students = parseClient?.students
         uniqueKey = parseClient?.currentStudent?.uniqueKey
         activityIndicator.hidesWhenStopped = true
     }
@@ -200,7 +201,7 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         getStudentsFromServer()
         
-        if let urlString = students![indexPath.row].mediaURL
+        if let urlString = parseClient!.students![indexPath.row].mediaURL
         {
             let app = UIApplication.sharedApplication()
             if let url = NSURL(string: urlString){
@@ -220,7 +221,7 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
     }
 
     func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
-        if let students = students{
+        if let students = parseClient!.students{
             if let mapString = students[indexPath.row].mapString, cell = tableView.cellForRowAtIndexPath(indexPath) {
                 cell.detailTextLabel?.text = mapString
             }
@@ -228,7 +229,7 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
-        if let students = students {
+        if let students = parseClient!.students {
             if let urlString = students[indexPath.row].mediaURL{
                 let app = UIApplication.sharedApplication()
                 if let url = NSURL(string: urlString){

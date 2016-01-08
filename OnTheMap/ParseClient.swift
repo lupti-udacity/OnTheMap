@@ -20,6 +20,8 @@ class ParseClient: NSObject {
     let session: NSURLSession
     
     var students: [Student]?
+    // studentArray for holding refreshed student records from the Parse server
+    var studentArray: [Student]?
     var currentStudent: Student?
     
     override init() {

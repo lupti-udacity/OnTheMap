@@ -65,13 +65,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             
             if let students = students {
                 if let _ = self.parseClient{
-                    var studentArray: [Student] = [Student]()
+                    parseClient.studentArray = [Student]()
                     for studentData in students {
-                        studentArray.append( Student(dictionary: studentData) )
+                        parseClient.studentArray?.append(Student(dictionary: studentData))
                     }
-                    if studentArray.count > 0 {
+                    if parseClient.studentArray!.count > 0 {
                       dispatch_async(dispatch_get_main_queue()){
-                            parseClient.students = studentArray
+                            parseClient.students = parseClient.studentArray
                             // This is a critical step to repopulate or refreash the entire physical mapView's annotations
                             if self.mapView.annotations.count > 0 {
                                 self.mapView.removeAnnotations(self.mapView.annotations)
