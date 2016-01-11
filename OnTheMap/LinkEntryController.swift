@@ -14,19 +14,16 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var linkTextField: UITextField!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    var applicationDelegate: AppDelegate?
-    var currentStudent:Student?
-    var parseClient: ParseClient?
+    var currentStudent: Student?
+    var studentClient: StudentClient?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        parseClient = ParseClient.sharedInstance
+        studentClient = StudentClient.sharedInstance
         linkTextField.delegate = self
-        applicationDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
-        currentStudent = parseClient?.currentStudent
+        currentStudent = studentClient?.currentStudent
         activityIndicator.hidesWhenStopped = true
         addAnnotationsToMap()
-        
     }
     
     func addAnnotationsToMap() {
@@ -70,13 +67,8 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
             self.showAlert("Error", message:"Invalid link")
             return
         }
-        self.parseClient?.currentStudent?.mediaURL = "\(urlString)"
-        
-        guard let appDelegate = self.applicationDelegate else {
-            self.showAlert("Error", message:"Internal error 1")
-            return
-        }
-        guard let overwrite = appDelegate.onTheMap else {
+        self.studentClient?.currentStudent?.mediaURL = "\(urlString)"
+        guard let overwrite = studentClient!.onTheMap else {
             self.showAlert("Error", message:"Internal error 2")
             return
         }
@@ -91,7 +83,7 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
     
     func overwriteLocationObject(){
         let parseClient = ParseClient.sharedInstance
-        parseClient.overwriteStudent(self.parseClient?.currentStudent){
+        parseClient.overwriteStudent(self.studentClient?.currentStudent){
             (completed, errorString) in
             
             guard completed == true else {
@@ -109,7 +101,7 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
     
     func addLocationObject(){
         let parseClient = ParseClient.sharedInstance
-        parseClient.postStudent(self.parseClient?.currentStudent){
+        parseClient.postStudent(self.studentClient?.currentStudent){
             (completed, errorString) in
             guard completed == true else {
                 self.showAlert("Error", message: errorString)

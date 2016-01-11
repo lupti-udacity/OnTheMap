@@ -24,8 +24,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     var uniqueKey: String?
     var applicationDelegate: AppDelegate?
     let locationManager = CLLocationManager()
-    
-    var parseClient: ParseClient?
+    var studentClient: StudentClient?
 
     
     override func viewDidLoad() {
@@ -39,10 +38,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         if CLLocationManager.locationServicesEnabled(){
             locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
             locationManager.startUpdatingLocation()
-            parseClient = ParseClient.sharedInstance
+            studentClient = StudentClient.sharedInstance
         
             applicationDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
-            uniqueKey = parseClient?.currentStudent?.uniqueKey
+            uniqueKey = studentClient!.currentStudent?.uniqueKey
             activityIndicator.hidesWhenStopped = true
         }
         
@@ -64,14 +63,14 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         parseClient.getStudentsLocation(){ (students, errorString) in
             
             if let students = students {
-                if let _ = self.parseClient{
-                    parseClient.studentArray = [Student]()
+                if let _ = self.studentClient{
+                    self.studentClient!.studentArray = [Student]()
                     for studentData in students {
-                        parseClient.studentArray?.append(Student(dictionary: studentData))
+                        self.studentClient!.studentArray?.append(Student(dictionary: studentData))
                     }
-                    if parseClient.studentArray!.count > 0 {
+                    if self.studentClient!.studentArray!.count > 0 {
                       dispatch_async(dispatch_get_main_queue()){
-                            parseClient.students = parseClient.studentArray
+                            self.studentClient!.students = self.studentClient!.studentArray
                             // This is a critical step to repopulate or refreash the entire physical mapView's annotations
                             if self.mapView.annotations.count > 0 {
                                 self.mapView.removeAnnotations(self.mapView.annotations)
@@ -96,7 +95,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     func addAnnotationsToMap() {
         dispatch_async(dispatch_get_main_queue()){
-            if let students = self.parseClient?.students{
+            if let students = self.studentClient?.students{
                 var annotations = [MKAnnotation]()
                 for student in students {
                     if let lon = student.longitude,lat = student.latitude, first = student.firstName, last = student.lastName, media = student.mediaURL {
@@ -135,10 +134,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         parseClient.queryForStudent(uniqueKey!){
             student, errorString in
             if let student = student {
-                self.applicationDelegate?.onTheMap = true
-                self.parseClient?.currentStudent = student
+                self.studentClient?.onTheMap = true
+                self.studentClient?.currentStudent = student
             } else {
-                self.applicationDelegate?.onTheMap = false
+                self.studentClient?.onTheMap = false
             }
             if student == nil {
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -153,8 +152,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     @IBAction func logoutPressed(sender: AnyObject) {
         let logoutController = presentingViewController as? LoginViewController
         logoutController?.passwordTextField.text = ""
-        parseClient?.students = nil
-        parseClient?.currentStudent = nil
+        studentClient?.students = nil
+        studentClient?.currentStudent = nil
         self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil )
         let udacityClient = UdacityClient.sharedInstance
         udacityClient.logoutSession()

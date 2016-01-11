@@ -14,7 +14,7 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var locationTextField: UITextField!
     var applicationDelegate: AppDelegate?
-    var parseClient: ParseClient?
+    var studentClient: StudentClient?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,7 +22,7 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
         signUpForNotifications()
         applicationDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
         activityIndicator.hidesWhenStopped = true
-        parseClient = ParseClient.sharedInstance
+        studentClient = StudentClient.sharedInstance
     }
     
     @IBAction func didPressCancel(sender: AnyObject) {
@@ -57,17 +57,17 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
                 return
             }
             guard let city = placemark1.locality else {
-                self.parseClient!.currentStudent?.mapString = "\(state), \(country)"
-                self.parseClient!.currentStudent?.latitude = (placemark1.location!.coordinate.latitude)
-                self.parseClient!.currentStudent?.longitude = (placemark1.location!.coordinate.longitude)
-                self.presentViewWith(self.parseClient!.currentStudent?.mapString,lat: nil,lon: nil)
+                self.studentClient!.currentStudent?.mapString = "\(state), \(country)"
+                self.studentClient!.currentStudent?.latitude = (placemark1.location!.coordinate.latitude)
+                self.studentClient!.currentStudent?.longitude = (placemark1.location!.coordinate.longitude)
+                self.presentViewWith(self.studentClient!.currentStudent?.mapString,lat: nil,lon: nil)
                 return
                 
             }
-            self.parseClient!.currentStudent?.mapString = "\(city), \(state), \(country)"
-            self.parseClient!.currentStudent?.latitude = (placemark1.location!.coordinate.latitude)
-            self.parseClient!.currentStudent?.longitude = (placemark1.location!.coordinate.longitude)
-            self.presentViewWith(self.parseClient!.currentStudent?.mapString,lat: self.parseClient!.currentStudent?.latitude,lon: self.parseClient!.currentStudent?.longitude)
+            self.studentClient!.currentStudent?.mapString = "\(city), \(state), \(country)"
+            self.studentClient!.currentStudent?.latitude = (placemark1.location!.coordinate.latitude)
+            self.studentClient!.currentStudent?.longitude = (placemark1.location!.coordinate.longitude)
+            self.presentViewWith(self.studentClient!.currentStudent?.mapString,lat: self.studentClient!.currentStudent?.latitude,lon: self.studentClient!.currentStudent?.longitude)
         }
     }
     

@@ -18,12 +18,7 @@ class ParseClient: NSObject {
     typealias ParseCompletionHandler =
         (data: [[String: AnyObject]]?, errorString: String?) -> Void
     let session: NSURLSession
-    
-    var students: [Student]?
-    // studentArray for holding refreshed student records from the Parse server
-    var studentArray: [Student]?
-    var currentStudent: Student?
-    
+ 
     override init() {
         session = NSURLSession.sharedSession()
         super.init()

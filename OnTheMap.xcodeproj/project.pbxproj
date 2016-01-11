@@ -24,6 +24,7 @@
 		BC98E2201C3B7C1900C69727 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC98E21F1C3B7C1900C69727 /* FBSDKCoreKit.framework */; };
 		BC98E2221C3B7C2D00C69727 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC98E2211C3B7C2D00C69727 /* FBSDKLoginKit.framework */; };
 		BC98E2241C3B7C3F00C69727 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC98E2231C3B7C3F00C69727 /* FBSDKShareKit.framework */; };
+		BCF7D0461C43945400CE8A4E /* StudentClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCF7D0451C43945400CE8A4E /* StudentClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 		BC98E21F1C3B7C1900C69727 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		BC98E2211C3B7C2D00C69727 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		BC98E2231C3B7C3F00C69727 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
+		BCF7D0451C43945400CE8A4E /* StudentClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +118,7 @@
 		BC0381311C20A16F003F78E8 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				BCF7D0451C43945400CE8A4E /* StudentClient.swift */,
 				BC54065B1C31F9BF00880BE8 /* UdacitySession.swift */,
 				BC0381361C20A21E003F78E8 /* Student.swift */,
 				BC0381351C20A1E6003F78E8 /* ParseAPI */,
@@ -293,6 +296,7 @@
 				BC0381431C20A315003F78E8 /* LocationEntryController.swift in Sources */,
 				BC03813B1C20A2A6003F78E8 /* ParseClient.swift in Sources */,
 				BC0380E81C1FA0E5003F78E8 /* LoginViewController.swift in Sources */,
+				BCF7D0461C43945400CE8A4E /* StudentClient.swift in Sources */,
 				BC0381411C20A2F5003F78E8 /* TableListController.swift in Sources */,
 				BC0381371C20A21E003F78E8 /* Student.swift in Sources */,
 				BC4D27BB1C39E2CD0094EFDC /* BorderedButton.swift in Sources */,

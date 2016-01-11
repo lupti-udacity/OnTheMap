@@ -37,7 +37,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
     var udacityClient: UdacityClient?
     var applicationDelegate: AppDelegate?
     var fbLoginManager: FBSDKLoginManager?
-    var parseClient: ParseClient?
+    var studentClient: StudentClient?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,7 +52,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
         activityIndicator.hidesWhenStopped = true
         
         // Student 
-        parseClient = ParseClient.sharedInstance
+        studentClient = StudentClient.sharedInstance
         
         // FBSDK
         if (FBSDKAccessToken.currentAccessToken() != nil)
@@ -89,8 +89,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
                     if data != nil {
                         if let _ = self.applicationDelegate{
                             if self.applicationDelegate != nil {
-                                self.parseClient?.currentStudent =
-                                Student(dictionary: data!)
+                                self.studentClient?.currentStudent = Student(dictionary: data!)
                                 self.getPublicData()
                             }else{ self.showError("Error", message: "System internal error 1") }
                     } else { self.showError("Error", message: "System internal error 2") }
@@ -122,7 +121,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
                 if data != nil {
                     if let _ = self.applicationDelegate{
                         if self.applicationDelegate != nil {
-                            self.parseClient?.currentStudent =
+                            self.studentClient?.currentStudent =
                                 Student(dictionary: data!)
                             self.getPublicData()
                         }else{ self.showError("Error", message: "System internal error 1") }
@@ -137,15 +136,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
     func getPublicData(){
         dispatch_async(dispatch_get_main_queue()){
         if let _ = self.applicationDelegate{
-            if let key = self.parseClient!.currentStudent?.uniqueKey{
+            if let key = self.studentClient!.currentStudent?.uniqueKey{
                 self.udacityClient?.getStudentDataWith(key){
                     data, errorString in
                     if let data = data {
                         print("**** 2nd step getStudentDataWith Unique Key is \(data)")
                         dispatch_async(dispatch_get_main_queue()){
-                            self.parseClient!.currentStudent!.firstName =
+                            self.studentClient!.currentStudent!.firstName =
                                 data["firstName"] as? String
-                            self.parseClient!.currentStudent!.lastName =
+                            self.studentClient!.currentStudent!.lastName =
                                 data["lastName"] as? String
                             self.activityIndicator.stopAnimating()
                             self.loginUdacityButton.enabled = true
