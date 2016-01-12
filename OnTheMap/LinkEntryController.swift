@@ -28,7 +28,7 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
     
     func addAnnotationsToMap() {
         dispatch_async(dispatch_get_main_queue()){
-            
+            self.activityIndicator.startAnimating()
             guard let student = self.currentStudent, lon = student.longitude, lat = student.latitude else {
                 self.showAlert("Error", message: "Unable to get student data")
                 return
@@ -42,7 +42,7 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
             let cammera =
             MKMapCamera(lookingAtCenterCoordinate: coordinate, fromEyeCoordinate: coordinate, eyeAltitude: 10000.0)
             self.mapView.setCamera(cammera, animated: true)
-
+            self.activityIndicator.stopAnimating()
         }
     }
     

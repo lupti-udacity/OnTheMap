@@ -30,14 +30,18 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func didPressEnter(sender: AnyObject) {
-        if locationTextField.text!.isEmpty{
+        guard locationTextField.text?.isEmpty == false else {
             showAlert("ERROR", message: "Enter a location")
             return
         }
         
+        dispatch_async(dispatch_get_main_queue()){
+        self.activityIndicator.startAnimating()
+
         let geocoder = CLGeocoder()
-        geocoder.geocodeAddressString(locationTextField.text!){
+        geocoder.geocodeAddressString(self.locationTextField.text!){
             placemark, error in
+
             if let error = error {
                 self.showAlert("ERROR", message: error.localizedDescription)
                 return
@@ -56,6 +60,8 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
                 self.showAlert("ERROR", message:"Be more specific in location")
                 return
             }
+            
+
             guard let city = placemark1.locality else {
                 self.studentClient!.currentStudent?.mapString = "\(state), \(country)"
                 self.studentClient!.currentStudent?.latitude = (placemark1.location!.coordinate.latitude)
@@ -68,6 +74,10 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
             self.studentClient!.currentStudent?.latitude = (placemark1.location!.coordinate.latitude)
             self.studentClient!.currentStudent?.longitude = (placemark1.location!.coordinate.longitude)
             self.presentViewWith(self.studentClient!.currentStudent?.mapString,lat: self.studentClient!.currentStudent?.latitude,lon: self.studentClient!.currentStudent?.longitude)
+            }
+            if self.activityIndicator.isAnimating() {
+                self.activityIndicator.stopAnimating()
+            }
         }
     }
     
@@ -104,8 +114,9 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    //MARK: - User Interface
-    
+    //MARK: - User Interface 
+    // Must have else crash.
+
     func keyboardDidShow(notification: NSNotification){
         if view.frame.origin.y == 0 {
             view.frame.origin.y =
@@ -128,8 +139,7 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
         if locationTextField.isFirstResponder() && locationTextField.text!.isEmpty == false{
             locationTextField.resignFirstResponder()
         }
-        
         return false
     }
-    
+
 }
