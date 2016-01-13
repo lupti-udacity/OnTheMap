@@ -25,6 +25,13 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
         studentClient = StudentClient.sharedInstance
     }
     
+    override func viewWillAppear(animated: Bool) {
+        print("$$$$$ View Will Appear..."  )
+        if activityIndicator.isAnimating() {
+            activityIndicator.stopAnimating()
+        }
+    }
+    
     @IBAction func didPressCancel(sender: AnyObject) {
         self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
     }
@@ -35,9 +42,7 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
             return
         }
         
-        dispatch_async(dispatch_get_main_queue()){
-        self.activityIndicator.startAnimating()
-
+        activityIndicator.startAnimating()
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(self.locationTextField.text!){
             placemark, error in
@@ -61,7 +66,6 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
                 return
             }
             
-
             guard let city = placemark1.locality else {
                 self.studentClient!.currentStudent?.mapString = "\(state), \(country)"
                 self.studentClient!.currentStudent?.latitude = (placemark1.location!.coordinate.latitude)
@@ -75,10 +79,6 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
             self.studentClient!.currentStudent?.longitude = (placemark1.location!.coordinate.longitude)
             self.presentViewWith(self.studentClient!.currentStudent?.mapString,lat: self.studentClient!.currentStudent?.latitude,lon: self.studentClient!.currentStudent?.longitude)
             }
-            if self.activityIndicator.isAnimating() {
-                self.activityIndicator.stopAnimating()
-            }
-        }
     }
     
     //MARK: - Helper Methods
@@ -93,6 +93,7 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
     //Shows alert and stops activity indicator
     func showAlert(title: String? , message: String?) {
         dispatch_async(dispatch_get_main_queue()){
+            self.activityIndicator.stopAnimating()
             if title != nil && message != nil {
                 let errorAlert =
                 UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
