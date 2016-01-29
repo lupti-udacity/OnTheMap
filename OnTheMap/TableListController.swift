@@ -51,8 +51,8 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
                 self.studentClient?.onTheMap = false
             }
             if student == nil {
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let addNewPin = storyboard.instantiateViewControllerWithIdentifier("addNewPin") as? UINavigationController
+                
+                let addNewPin = self.storyboard!.instantiateViewControllerWithIdentifier("addNewPin") as? UINavigationController
                 self.presentViewController(addNewPin!, animated: true, completion: nil)
             } else {
                 self.showOverwriteAlert("Alert", message: "Student pin already exists", student: student)
@@ -99,8 +99,8 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
                 UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
                 alert.addAction(UIAlertAction(title: "cancel", style: UIAlertActionStyle.Default, handler: nil))
                 alert.addAction(UIAlertAction(title: "overwrite", style: UIAlertActionStyle.Default, handler: { alert -> Void in
-                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                    let addPinNav = storyboard.instantiateViewControllerWithIdentifier("addNewPin") as? UINavigationController
+                    
+                    let addPinNav = self.storyboard!.instantiateViewControllerWithIdentifier("addNewPin") as? UINavigationController
                     self.presentViewController(addPinNav!, animated: true, completion: nil)
                 }))
                 self.presentViewController(alert, animated: true, completion: nil)

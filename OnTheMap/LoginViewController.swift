@@ -189,8 +189,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
     
     func transitionToMap() {
         dispatch_async(dispatch_get_main_queue()){
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let tabController = storyboard.instantiateViewControllerWithIdentifier("TabController") as? UITabBarController
+            
+            let tabController = self.storyboard!.instantiateViewControllerWithIdentifier("TabController") as? UITabBarController
             if let tabController = tabController{
                 self.presentViewController(tabController, animated: true, completion: nil)
             } else {

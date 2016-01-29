@@ -78,7 +78,7 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
             self.studentClient!.currentStudent?.latitude = (placemark1.location!.coordinate.latitude)
             self.studentClient!.currentStudent?.longitude = (placemark1.location!.coordinate.longitude)
             self.presentViewWith(self.studentClient!.currentStudent?.mapString,lat: self.studentClient!.currentStudent?.latitude,lon: self.studentClient!.currentStudent?.longitude)
-            }
+        }
     }
     
     //MARK: - Helper Methods
