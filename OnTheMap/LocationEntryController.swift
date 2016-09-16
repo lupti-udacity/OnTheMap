@@ -85,9 +85,9 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
     
     func signUpForNotifications() {
         let center: NSNotificationCenter = NSNotificationCenter.defaultCenter()
-        center.addObserver(self, selector: "keyboardDidShow:", name:
+        center.addObserver(self, selector: #selector(LocationEntryController.keyboardDidShow(_:)), name:
             UIKeyboardWillShowNotification, object: nil)
-        center.addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+        center.addObserver(self, selector: #selector(LocationEntryController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
     }
     
     //Shows alert and stops activity indicator

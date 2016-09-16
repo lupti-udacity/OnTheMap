@@ -34,7 +34,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         //self.locationManager.requestAlwaysAuthorization()
         
         //for useq in foreground
-        //self.locationManager.requestWhenInUseAuthorization()
+        self.locationManager.requestWhenInUseAuthorization()
         if CLLocationManager.locationServicesEnabled(){
             locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
             locationManager.startUpdatingLocation()

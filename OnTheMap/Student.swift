@@ -49,7 +49,7 @@ struct Student {
         updatedAt = dictionary["updatedAt"] as? NSDate
 
         let formatter = NSDateFormatter()
-        formatter.dateFormat = "yyy-MM-dd'T'HH:mm:ss'.'SSSZ"
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.'SSSZ"
         if let updatedString = dictionary["updatedAt"] as? String {
             updatedAt = formatter.dateFromString(updatedString)
         }

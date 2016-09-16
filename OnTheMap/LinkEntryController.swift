@@ -41,6 +41,8 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
             self.mapView.addAnnotation(annotation)
             let cammera =
             MKMapCamera(lookingAtCenterCoordinate: coordinate, fromEyeCoordinate: coordinate, eyeAltitude: 10000.0)
+            print("*** Camera is \(cammera)")
+            /* For zooming in to the location you entered in, use mapView.setCamera to set the zoomed in and 3D effect */
             self.mapView.setCamera(cammera, animated: true)
             self.activityIndicator.stopAnimating()
         }
@@ -87,6 +89,7 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
             (completed, errorString) in
             
             guard completed == true else {
+                print("*** Error: \(errorString)")
                 self.showAlert("Error", message: errorString)
                 return
             }

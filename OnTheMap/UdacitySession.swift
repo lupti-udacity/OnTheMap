@@ -24,7 +24,7 @@ struct UdacitySession {
         expiration = dictionary["expiration"] as? NSDate
 
         let formatter = NSDateFormatter()
-        formatter.dateFormat = "yyy-MM-dd'T'HH:mm:ss'.'SSSZ"
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.'SSSZ"
         if let expirationString = dictionary["expiration"] as? String {
             expiration = formatter.dateFromString(expirationString)
         }

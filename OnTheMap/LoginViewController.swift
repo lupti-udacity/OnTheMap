@@ -70,7 +70,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
         fbLoginManager?.logOut()
     }
     
-    /* Absoultely required FB loginButton function*/
+    /* Absoultely required FB 
+    function*/
     func loginButton(fbLoginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
         
         guard error == nil else {
@@ -169,9 +170,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
     
     func signUpForNotifications() {
         let center: NSNotificationCenter = NSNotificationCenter.defaultCenter()
-        center.addObserver(self, selector: "keyboardDidShow:", name:
+        center.addObserver(self, selector: #selector(LoginViewController.keyboardDidShow(_:)), name:
             UIKeyboardWillShowNotification, object: nil)
-        center.addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+        center.addObserver(self, selector: #selector(LoginViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
     }
     
     func showError(title: String? , message: String?) {

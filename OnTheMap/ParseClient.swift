@@ -9,9 +9,9 @@
 import UIKit
 
 class ParseClient: NSObject {
-    
-    static let studentLocationUrl =
-    "https://api.parse.com/1/classes/StudentLocation/"
+    // deprecate Parse DB on August 3, 2016
+    //static let studentLocationUrl = "https://api.parse.com/1/classes/StudentLocation/"
+    static let studentLocationUrl = "https://parse.udacity.com/parse/classes/StudentLocation"
     static let apiKey = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
     static let aplicationID = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
     static let sharedInstance = ParseClient()
@@ -137,7 +137,8 @@ class ParseClient: NSObject {
     func overwriteStudent(student: Student?, completionHandler:(completed: Bool?, errorString: String?) -> Void){
         if let student = student{
             if let uniqueKey = student.uniqueKey, objectId = student.objectId, firstName = student.firstName, lastName = student.lastName, mapString = student.mapString, mediaURL = student.mediaURL, latitude = student.latitude, longitude = student.longitude{
-                let urlString = ParseClient.studentLocationUrl + objectId
+                let urlString = ParseClient.studentLocationUrl + "/" + objectId
+                print(">>>>  Overwrit Student URL is \(urlString)")
                 if let url = NSURL(string: urlString){
                     
                     let request = NSMutableURLRequest(URL: url)
@@ -149,11 +150,14 @@ class ParseClient: NSObject {
                     
                     let task = session.dataTaskWithRequest(request){
                         (data, response, error) in
+                        
                         if let error = error {
+                            print("*** Any error here?")
                             completionHandler(completed: false, errorString: error.localizedDescription)
                             return
                         }
                         if let data = data {
+                            print("*** data = data \(data)")
                             self.parseOverwriteRequest(data: data, completionHandler: completionHandler)
                             return
                         }else {
@@ -239,22 +243,19 @@ class ParseClient: NSObject {
     }
     
     func parseOverwriteRequest(data data: NSData, completionHandler: (completed: Bool?, errorString: String?) -> Void){
-        do{
-            if let parsedData =
-                try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as? [String: AnyObject]{
-                    if let _ = parsedData["updatedAt"] as? String{
-                        let url = parsedData["mediaURL"]
-                        print("++++ OverwriteRequest URL is \(url)")
-                        print("++++  OverwriteRequest Data \(parsedData)")
-                        completionHandler(completed: true, errorString: nil)
-                        return
-                    }
-                    completionHandler(completed: false, errorString: "Unable to update")
-                    return
-            }
-        } catch let error as NSError{
-            completionHandler(completed: false, errorString: error.localizedDescription)
+        
+        //var parsedData: AnyObject!
+        do {
+            //parsedData =
+            try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+            
+        } catch {
+            let userInfo = [NSLocalizedDescriptionKey : "parseOVerwriteRequest: Could not parse the data as JSON: '\(data)'"]
+            completionHandler(completed: nil, errorString: userInfo.description)
+            
         }
+        
+        completionHandler(completed: true, errorString: nil)
     }
     
     /* Helper function: Given a dictionary of parameters,
