@@ -89,7 +89,7 @@ class ParseClient: NSObject {
             completionHandler(completed: false, errorString: "Invalid objectId")
         }
         if let objectId = objectId {
-            let urlString = ParseClient.studentLocationUrl + objectId
+            let urlString = ParseClient.studentLocationUrl + "/" + objectId
             let request = NSMutableURLRequest(URL: NSURL(string: urlString)!)
             request.addValue(ParseClient.aplicationID, forHTTPHeaderField: "X-Parse-Application-Id")
             request.addValue(ParseClient.apiKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
