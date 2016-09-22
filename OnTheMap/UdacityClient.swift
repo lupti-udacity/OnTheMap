@@ -15,28 +15,28 @@ class UdacityClient: NSObject {
     static let loginUrl : String = "https://www.udacity.com/api/session"
     static let publicDataUrl : String = "https://www.udacity.com/api/users/"
     typealias UdacityCompletionHandler =
-        (data: [String: AnyObject]?, errorString: String?) -> Void
-    let session: NSURLSession
+        (_ data: [String: AnyObject]?, _ errorString: String?) -> Void
+    let session: URLSession
     var currentSession: UdacitySession? //** Current user session struct
     var fbLoginManager: FBSDKLoginManager?
     
 
     override init() {
-        session = NSURLSession.sharedSession()
+        session = URLSession.shared
         super.init()
     }
     
     // MARK: - API Request Methods
     // Standard Udacity Login with email and password credential.
-    func loginWith(email: String, password: String, completionHandler: UdacityCompletionHandler) {
+    func loginWith(_ email: String, password: String, completionHandler: @escaping UdacityCompletionHandler) {
         
-        let request = NSMutableURLRequest(URL: NSURL(string: UdacityClient.loginUrl)! )
-        request.HTTPMethod = "POST"
+        let request = NSMutableURLRequest(url: URL(string: UdacityClient.loginUrl)! )
+        request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.HTTPBody = "{\"udacity\" : {\"username\" : \"\(email)\", \"password\" : \"\(password)\"}}".dataUsingEncoding(NSUTF8StringEncoding)
+        request.httpBody = "{\"udacity\" : {\"username\" : \"\(email)\", \"password\" : \"\(password)\"}}".data(using: String.Encoding.utf8)
         
-        let task = session.dataTaskWithRequest(request) {(data, response, error) in
+        let task = session.dataTask(with: request, completionHandler: {(data, response, error) in
             // Interesting: No let is needed!!!
             guard error == nil else {
                 completionHandler(data: nil, errorString: error!.localizedDescription)
@@ -46,10 +46,10 @@ class UdacityClient: NSObject {
                 completionHandler(data: nil, errorString: "Login Error: Unable to retrieve data")
                 return
             }
-            let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5))
+            let newData = data!.subdata(with: NSMakeRange(5, data!.count - 5))
             self.parseLoginRequest(data: newData, completionHandler: completionHandler)
     
-        }
+        }) 
         task.resume()
     }
   
@@ -60,10 +60,10 @@ class UdacityClient: NSObject {
         fbLoginManager?.logOut()
         
         // log out Udacity session with cookies.
-        let request = NSMutableURLRequest(URL: NSURL(string: UdacityClient.loginUrl)! )
-        request.HTTPMethod = "DELETE"
-        var xsrfCookie: NSHTTPCookie? = nil
-        let sharedCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
+        let request = NSMutableURLRequest(url: URL(string: UdacityClient.loginUrl)! )
+        request.httpMethod = "DELETE"
+        var xsrfCookie: HTTPCookie? = nil
+        let sharedCookieStorage = HTTPCookieStorage.shared
         for cookie in sharedCookieStorage.cookies! {
             if cookie.name == "XSRF-TOKEN" {
                 xsrfCookie = cookie
@@ -73,30 +73,30 @@ class UdacityClient: NSObject {
         if let xsrfCookie = xsrfCookie {
             request.setValue(xsrfCookie.value, forHTTPHeaderField: "X-XSRF-TOKEN")
         }
-        let session = NSURLSession.sharedSession()
-        let task = session.dataTaskWithRequest(request) { data, response, error in
+        let session = URLSession.shared
+        let task = session.dataTask(with: request, completionHandler: { data, response, error in
             if error != nil { // Handle error…
                 print("Error from Udacity Session DELETE failed with \(error)")
                 return
             }
-            let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5)) /* subset response data! */
+            let newData = data!.subdata(with: NSMakeRange(5, data!.count - 5)) /* subset response data! */
             print("******* Udacity Session Deleted with data \(newData)")
-            print(NSString(data: newData, encoding: NSUTF8StringEncoding))
-        }
+            print(NSString(data: newData, encoding: String.Encoding.utf8))
+        }) 
 
         task.resume()
     }
 
     
     //Facebook login with FB currentAccessToken
-    func loginWithFB(fbToken: String, completionHandler: UdacityCompletionHandler) {        
-        let request = NSMutableURLRequest(URL: NSURL(string: UdacityClient.loginUrl)! )
-        request.HTTPMethod = "POST"
+    func loginWithFB(_ fbToken: String, completionHandler: @escaping UdacityCompletionHandler) {        
+        let request = NSMutableURLRequest(url: URL(string: UdacityClient.loginUrl)! )
+        request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.HTTPBody = "{\"facebook_mobile\": {\"access_token\": \"\(fbToken)\"}}".dataUsingEncoding(NSUTF8StringEncoding)
+        request.httpBody = "{\"facebook_mobile\": {\"access_token\": \"\(fbToken)\"}}".data(using: String.Encoding.utf8)
         
-        let task = session.dataTaskWithRequest(request) {(data, response, error) in
+        let task = session.dataTask(with: request, completionHandler: {(data, response, error) in
             // Interesting: No let is needed!!!
             print("** Facebook Error is \(error?.localizedDescription)")
             
@@ -109,26 +109,26 @@ class UdacityClient: NSObject {
                 completionHandler(data: nil, errorString: "Login Error: Unable to retrieve data")
                 return
             }
-            let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5))
+            let newData = data!.subdata(with: NSMakeRange(5, data!.count - 5))
             print("*** NewData")
-            print(NSString(data: newData, encoding: NSUTF8StringEncoding))
+            print(NSString(data: newData, encoding: String.Encoding.utf8))
             
             self.parseLoginRequest(data: newData, completionHandler: completionHandler)
-        }
+        }) 
         task.resume()
     }
 
     
-    func getStudentDataWith(uniqueKey: String?,  completionHandler: UdacityCompletionHandler){
+    func getStudentDataWith(_ uniqueKey: String?,  completionHandler: @escaping UdacityCompletionHandler){
         
-        if let uniqueKey = uniqueKey, url = NSURL(string: UdacityClient.publicDataUrl + uniqueKey) {
+        if let uniqueKey = uniqueKey, let url = URL(string: UdacityClient.publicDataUrl + uniqueKey) {
             let request =
-            NSMutableURLRequest(URL: url)
+            NSMutableURLRequest(url: url)
             request.addValue("application/json", forHTTPHeaderField: "Accept")
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.HTTPMethod = "GET"
+            request.httpMethod = "GET"
             
-            let task = session.dataTaskWithRequest(request){
+            let task = session.dataTask(with: request, completionHandler: {
                 (data, response, error) in
                 
                 guard error == nil else {
@@ -136,32 +136,32 @@ class UdacityClient: NSObject {
                     return
                 }
                 
-                let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5))
+                let newData = data!.subdata(with: NSMakeRange(5, data!.count - 5))
                 self.parseStudentDataRequest(data: newData, completionHandler: completionHandler)
-            }
+            })
             task.resume()
-        } else { completionHandler(data: nil, errorString: "Incorrect Id") }
+        } else { completionHandler(nil, "Incorrect Id") }
     }
     
     // MARK: - Helper Methods
     
-    func parseLoginRequest(data data: NSData, completionHandler: UdacityCompletionHandler) {
+    func parseLoginRequest(data: Data, completionHandler: UdacityCompletionHandler) {
         do{
             let parsedData =
-            try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as? NSDictionary
+            try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as? NSDictionary
             
             guard let accountData = parsedData!["account"] as? [String: AnyObject] else {
-                completionHandler(data: nil, errorString: "User does not have Udacity account")
+                completionHandler(nil, "User does not have Udacity account")
                 return
             }
             
             guard let _ = accountData["registered"] as? Bool else{
-                completionHandler(data: nil, errorString:"Unable to verify registration")
+                completionHandler(nil, "Unable to verify registration")
                 return
             }
             
             guard let sessionData = parsedData!["session"] as? [String: AnyObject] else {
-                completionHandler(data: nil, errorString: "Login Error: Unable to obtain session")
+                completionHandler(nil, "Login Error: Unable to obtain session")
                 return
             }
             
@@ -172,35 +172,35 @@ class UdacityClient: NSObject {
                 "registered": accountData["registered"]!
             ]
             
-            currentSession = UdacitySession(dictionary: dictionary)
-            completionHandler(data: dictionary, errorString: nil)
+            currentSession = UdacitySession(dictionary: dictionary as NSDictionary)
+            completionHandler(dictionary, nil)
             
         } catch let error as NSError{
-                completionHandler(data: nil, errorString: "Login Error: \(error.localizedDescription)")
+                completionHandler(nil, "Login Error: \(error.localizedDescription)")
         }
     }
     
     
-    func parseStudentDataRequest(data data: NSData, completionHandler: UdacityCompletionHandler){
+    func parseStudentDataRequest(data: Data, completionHandler: UdacityCompletionHandler){
         do{
             let parsedData =
-            try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as? NSDictionary
+            try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as? NSDictionary
             
             guard let data = parsedData!["user"] as? [String: AnyObject] else{
-                completionHandler(data: nil, errorString: "Unable to get user data")
+                completionHandler(nil, "Unable to get user data")
                 return
             }
             
-            guard let firstName = (data["first_name"] as? String), lastName = (data["last_name"] as? String) else {
-                completionHandler(data: nil, errorString: "Unable to get user's name")
+            guard let firstName = (data["first_name"] as? String), let lastName = (data["last_name"] as? String) else {
+                completionHandler(nil, "Unable to get user's name")
                 return
             }
             
-            let dic:[String: AnyObject] = ["firstName": firstName, "lastName":lastName]
-            completionHandler(data: dic, errorString: nil)
+            let dic:[String: AnyObject] = ["firstName": firstName as AnyObject, "lastName":lastName as AnyObject]
+            completionHandler(dic, nil)
 
         } catch let error as NSError{
-            completionHandler(data: nil, errorString: error.localizedDescription)
+            completionHandler(nil, error.localizedDescription)
         }
     }
     

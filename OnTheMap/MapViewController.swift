@@ -40,7 +40,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             locationManager.startUpdatingLocation()
             studentClient = StudentClient.sharedInstance
         
-            applicationDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
+            applicationDelegate = UIApplication.shared.delegate as? AppDelegate
             uniqueKey = studentClient!.currentStudent?.uniqueKey
             activityIndicator.hidesWhenStopped = true
         }
@@ -48,14 +48,14 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         self.mapView.delegate = self
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         getStudentsFromServer()
     }
     
     func getStudentsFromServer() {
         self.activityIndicator.startAnimating()
-        UIView.animateWithDuration(0.3, animations: {
-            self.activityIndicator.color = UIColor.redColor()
+        UIView.animate(withDuration: 0.3, animations: {
+            self.activityIndicator.color = UIColor.red
             self.activityIndicator.alpha = 1.0
         })
 
@@ -66,10 +66,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 if let _ = self.studentClient{
                     self.studentClient!.studentArray = [Student]()
                     for studentData in students {
-                        self.studentClient!.studentArray?.append(Student(dictionary: studentData))
+                        self.studentClient!.studentArray?.append(Student(dictionary: studentData as NSDictionary))
                     }
                     if self.studentClient!.studentArray!.count > 0 {
-                      dispatch_async(dispatch_get_main_queue()){
+                      DispatchQueue.main.async{
                             self.studentClient!.students = self.studentClient!.studentArray
                             // This is a critical step to repopulate or refreash the entire physical mapView's annotations
                             if self.mapView.annotations.count > 0 {
@@ -94,11 +94,11 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     func addAnnotationsToMap() {
-        dispatch_async(dispatch_get_main_queue()){
+        DispatchQueue.main.async{
             if let students = self.studentClient?.students{
                 var annotations = [MKAnnotation]()
                 for student in students {
-                    if let lon = student.longitude,lat = student.latitude, first = student.firstName, last = student.lastName, media = student.mediaURL {
+                    if let lon = student.longitude,let lat = student.latitude, let first = student.firstName, let last = student.lastName, let media = student.mediaURL {
                         let lat = CLLocationDegrees(Double((lat)))
                         let long = CLLocationDegrees(Double((lon)))
                         let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
@@ -122,12 +122,12 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     //MARK: - Actions
     
-    @IBAction func reloadButtonPressed(sender: AnyObject) {
+    @IBAction func reloadButtonPressed(_ sender: AnyObject) {
         getStudentsFromServer()
     }
 
-    @IBAction func addPinPressed(sender: AnyObject) {
-        if self.activityIndicator.isAnimating() {
+    @IBAction func addPinPressed(_ sender: AnyObject) {
+        if self.activityIndicator.isAnimating {
             self.activityIndicator.stopAnimating()
         }
         let parseClient = ParseClient.sharedInstance
@@ -141,75 +141,75 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
             if student == nil {
                 
-                let addNewPin = self.storyboard!.instantiateViewControllerWithIdentifier("addNewPin") as? UINavigationController
-                self.presentViewController(addNewPin!, animated: true, completion: nil)
+                let addNewPin = self.storyboard!.instantiateViewController(withIdentifier: "addNewPin") as? UINavigationController
+                self.present(addNewPin!, animated: true, completion: nil)
             } else {
                 self.showOverwriteAlert("Alert", message: "Student pin already exists", student: student)
             }
         }
     }
 
-    @IBAction func logoutPressed(sender: AnyObject) {
+    @IBAction func logoutPressed(_ sender: AnyObject) {
         let logoutController = presentingViewController as? LoginViewController
         logoutController?.passwordTextField.text = ""
         studentClient?.students = nil
         studentClient?.currentStudent = nil
-        self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil )
+        self.presentingViewController?.dismiss(animated: true, completion: nil )
         let udacityClient = UdacityClient.sharedInstance
         udacityClient.logoutSession()
     }
     
     //MARK: - Helper Methods
     
-    func showAlert(title: String? , message: String?) {
-        dispatch_async(dispatch_get_main_queue()){
+    func showAlert(_ title: String? , message: String?) {
+        DispatchQueue.main.async{
             self.activityIndicator.stopAnimating()
             if title != nil && message != nil {
                 let errorAlert =
-                UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
-                errorAlert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.Default, handler: nil))
-                self.presentViewController(errorAlert, animated: true, completion: nil)
+                UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+                errorAlert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.default, handler: nil))
+                self.present(errorAlert, animated: true, completion: nil)
             }
         }
     }
     
-    func showOverwriteAlert(title: String?, message: String?, student: Student?) {
-        dispatch_async(dispatch_get_main_queue()){
+    func showOverwriteAlert(_ title: String?, message: String?, student: Student?) {
+        DispatchQueue.main.async{
             if title != nil && message != nil {
                 let alert =
-                UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
-                alert.addAction(UIAlertAction(title: "cancel", style: UIAlertActionStyle.Default, handler: nil))
-                alert.addAction(UIAlertAction(title: "overwrite", style: UIAlertActionStyle.Default, handler: { alert -> Void in
+                UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "cancel", style: UIAlertActionStyle.default, handler: nil))
+                alert.addAction(UIAlertAction(title: "overwrite", style: UIAlertActionStyle.default, handler: { alert -> Void in
                     
-                    let addNewPin = self.storyboard!.instantiateViewControllerWithIdentifier("addNewPin") as? UINavigationController
-                    self.presentViewController(addNewPin!, animated: true, completion: nil)
+                    let addNewPin = self.storyboard!.instantiateViewController(withIdentifier: "addNewPin") as? UINavigationController
+                    self.present(addNewPin!, animated: true, completion: nil)
                 }))
-                self.presentViewController(alert, animated: true, completion: nil)
+                self.present(alert, animated: true, completion: nil)
             }
         }
     }
     
     // MARK: - MKMapViewDelegate
     
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let reuseId = "pin"
-        var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
         if pinView == nil {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
             pinView!.canShowCallout = true
-            pinView!.pinTintColor = UIColor.redColor()
-            pinView!.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
+            pinView!.pinTintColor = UIColor.red
+            pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
         }
         else { pinView!.annotation = annotation }
         
         return pinView
     }
     
-    func mapView(mapView: MKMapView, annotationView: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+    func mapView(_ mapView: MKMapView, annotationView: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if control == annotationView.rightCalloutAccessoryView {
-            let app = UIApplication.sharedApplication()
+            let app = UIApplication.shared
             
-            if let url = NSURL(string: annotationView.annotation!.subtitle!!){
+            if let url = URL(string: annotationView.annotation!.subtitle!!){
                 if app.canOpenURL(url){
                     app.openURL(url)
                 }

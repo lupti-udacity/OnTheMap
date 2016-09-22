@@ -23,7 +23,7 @@ struct Student {
     var mediaURL: String?
     var latitude: Double?
     var longitude: Double?
-    var updatedAt: NSDate?
+    var updatedAt: Date?
     
     init() {
         objectId = nil
@@ -46,12 +46,12 @@ struct Student {
         mediaURL = dictionary["mediaURL"] as? String
         latitude = dictionary["latitude"] as? Double
         longitude = dictionary["longitude"] as? Double
-        updatedAt = dictionary["updatedAt"] as? NSDate
+        updatedAt = dictionary["updatedAt"] as? Date
 
-        let formatter = NSDateFormatter()
+        let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.'SSSZ"
         if let updatedString = dictionary["updatedAt"] as? String {
-            updatedAt = formatter.dateFromString(updatedString)
+            updatedAt = formatter.date(from: updatedString)
         }
     }
     

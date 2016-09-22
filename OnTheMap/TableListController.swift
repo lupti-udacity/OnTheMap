@@ -27,21 +27,21 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var toolBar: UIToolbar!
     
-    @IBAction func logoutPressed(sender: AnyObject) {
+    @IBAction func logoutPressed(_ sender: AnyObject) {
         let logoutController = presentingViewController as? LoginViewController
         logoutController?.passwordTextField.text = ""
         studentClient?.students = nil
         studentClient?.currentStudent = nil
-        self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil )
+        self.presentingViewController?.dismiss(animated: true, completion: nil )
         let udacityClient = UdacityClient.sharedInstance
         udacityClient.logoutSession()
     }
 
-    @IBAction func refresh(sender: AnyObject) {
+    @IBAction func refresh(_ sender: AnyObject) {
         getStudentsFromServer()
     }
     
-    @IBAction func addPinPressed(sender: AnyObject) {
+    @IBAction func addPinPressed(_ sender: AnyObject) {
         self.parseClient!.queryForStudent(uniqueKey!){
             student, errorString in
             if let student = student {
@@ -52,8 +52,8 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
             }
             if student == nil {
                 
-                let addNewPin = self.storyboard!.instantiateViewControllerWithIdentifier("addNewPin") as? UINavigationController
-                self.presentViewController(addNewPin!, animated: true, completion: nil)
+                let addNewPin = self.storyboard!.instantiateViewController(withIdentifier: "addNewPin") as? UINavigationController
+                self.present(addNewPin!, animated: true, completion: nil)
             } else {
                 self.showOverwriteAlert("Alert", message: "Student pin already exists", student: student)
             }
@@ -65,24 +65,24 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
         parseClient = ParseClient.sharedInstance
         studentClient = StudentClient.sharedInstance
         getStudentsFromServer()
-        applicationDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
+        applicationDelegate = UIApplication.shared.delegate as? AppDelegate
         uniqueKey = studentClient?.currentStudent?.uniqueKey
         activityIndicator.hidesWhenStopped = true
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         getStudentsFromServer()
         activityIndicator.hidesWhenStopped = true
         
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         getStudentsFromServer()
         
         if let _ = studentClient?.students {
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
         }
@@ -91,32 +91,32 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
     
     //MARK: - Helper Methods
     
-    func showOverwriteAlert(title: String?, message: String?, student: Student?) {
-        dispatch_async(dispatch_get_main_queue()){
+    func showOverwriteAlert(_ title: String?, message: String?, student: Student?) {
+        DispatchQueue.main.async{
             self.activityIndicator.stopAnimating()
             if title != nil && message != nil {
                 let alert =
-                UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
-                alert.addAction(UIAlertAction(title: "cancel", style: UIAlertActionStyle.Default, handler: nil))
-                alert.addAction(UIAlertAction(title: "overwrite", style: UIAlertActionStyle.Default, handler: { alert -> Void in
+                UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "cancel", style: UIAlertActionStyle.default, handler: nil))
+                alert.addAction(UIAlertAction(title: "overwrite", style: UIAlertActionStyle.default, handler: { alert -> Void in
                     
-                    let addPinNav = self.storyboard!.instantiateViewControllerWithIdentifier("addNewPin") as? UINavigationController
-                    self.presentViewController(addPinNav!, animated: true, completion: nil)
+                    let addPinNav = self.storyboard!.instantiateViewController(withIdentifier: "addNewPin") as? UINavigationController
+                    self.present(addPinNav!, animated: true, completion: nil)
                 }))
-                self.presentViewController(alert, animated: true, completion: nil)
+                self.present(alert, animated: true, completion: nil)
             }
         }
     }
 
     
-    func showAlert(title: String? , message: String?) {
-        dispatch_async(dispatch_get_main_queue()){
+    func showAlert(_ title: String? , message: String?) {
+        DispatchQueue.main.async{
             self.activityIndicator.stopAnimating()
             if title != nil && message != nil {
                 let errorAlert =
-                UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
-                errorAlert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.Default, handler: nil))
-                self.presentViewController(errorAlert, animated: true, completion: nil)
+                UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+                errorAlert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.default, handler: nil))
+                self.present(errorAlert, animated: true, completion: nil)
             }
         }
     }
@@ -125,8 +125,8 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
         
         let parseClient = ParseClient.sharedInstance
         self.activityIndicator.startAnimating()
-        UIView.animateWithDuration(0.4, animations: {
-            self.activityIndicator.color = UIColor.blueColor()
+        UIView.animate(withDuration: 0.4, animations: {
+            self.activityIndicator.color = UIColor.blue
             self.activityIndicator.alpha = 1.0
         })
         
@@ -138,10 +138,10 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
     
                     for studentData in students {
                         
-                      self.studentClient!.studentArray?.append( Student(dictionary: studentData) )
+                      self.studentClient!.studentArray?.append( Student(dictionary: studentData as NSDictionary) )
                     }
                     if self.studentClient!.studentArray!.count > 0 {
-                        dispatch_async(dispatch_get_main_queue()){
+                        DispatchQueue.main.async{
                             
                             self.studentClient!.students = self.studentClient!.studentArray
                             // assign students to the local students variable for the local table view scope
@@ -170,15 +170,15 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
     //MARK: - TableView Data Sourse Methods
     // A table delegate, cellForRawAtIndexPath automatically populates the table row by row, an important delegate methid for the table.
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-            let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
             if let students = self.studentClient?.students
             {
                 
-                let student = students[indexPath.row]
+                let student = students[(indexPath as NSIndexPath).row]
                 
-                if let firstName = student.firstName, lastName = student.lastName {
+                if let firstName = student.firstName, let lastName = student.lastName {
                     cell.textLabel?.text = "\(firstName) \(lastName)"
                 }
                 if let url = student.mediaURL {
@@ -188,7 +188,7 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
             return cell
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if let rows = self.studentClient?.students?.count{
             return rows
@@ -199,13 +199,13 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
     
     //MARK: - TableView Delegate Methods
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         getStudentsFromServer()
         
-        if let urlString = studentClient!.students![indexPath.row].mediaURL
+        if let urlString = studentClient!.students![(indexPath as NSIndexPath).row].mediaURL
         {
-            let app = UIApplication.sharedApplication()
-            if let url = NSURL(string: urlString){
+            let app = UIApplication.shared
+            if let url = URL(string: urlString){
                 guard app.canOpenURL(url) else {
                     showAlert("Error", message: "Invalid URI resource scheme.")
                     return
@@ -221,19 +221,19 @@ class TableListController: UIViewController, UITableViewDataSource, UITableViewD
         }
     }
 
-    func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         if let students = studentClient!.students{
-            if let mapString = students[indexPath.row].mapString, cell = tableView.cellForRowAtIndexPath(indexPath) {
+            if let mapString = students[(indexPath as NSIndexPath).row].mapString, let cell = tableView.cellForRow(at: indexPath) {
                 cell.detailTextLabel?.text = mapString
             }
         }
     }
     
-    func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
         if let students = studentClient!.students {
-            if let urlString = students[indexPath.row].mediaURL{
-                let app = UIApplication.sharedApplication()
-                if let url = NSURL(string: urlString){
+            if let urlString = students[(indexPath as NSIndexPath).row].mediaURL{
+                let app = UIApplication.shared
+                if let url = URL(string: urlString){
                     if app.canOpenURL(url){
                         app.openURL(url)
                     }

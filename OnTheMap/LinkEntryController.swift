@@ -27,9 +27,9 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
     }
     
     func addAnnotationsToMap() {
-        dispatch_async(dispatch_get_main_queue()){
+        DispatchQueue.main.async{
             self.activityIndicator.startAnimating()
-            guard let student = self.currentStudent, lon = student.longitude, lat = student.latitude else {
+            guard let student = self.currentStudent, let lon = student.longitude, let lat = student.latitude else {
                 self.showAlert("Error", message: "Unable to get student data")
                 return
             }
@@ -40,7 +40,7 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
             annotation.coordinate = coordinate
             self.mapView.addAnnotation(annotation)
             let cammera =
-            MKMapCamera(lookingAtCenterCoordinate: coordinate, fromEyeCoordinate: coordinate, eyeAltitude: 10000.0)
+            MKMapCamera(lookingAtCenter: coordinate, fromEyeCoordinate: coordinate, eyeAltitude: 10000.0)
             print("*** Camera is \(cammera)")
             /* For zooming in to the location you entered in, use mapView.setCamera to set the zoomed in and 3D effect */
             self.mapView.setCamera(cammera, animated: true)
@@ -50,14 +50,14 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
     
     //MARK: - Target Action
     
-    @IBAction func cancelButtonPressed(sender: AnyObject) {
-        presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func cancelButtonPressed(_ sender: AnyObject) {
+        presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func submitButtonPressed(sender: AnyObject) {
+    @IBAction func submitButtonPressed(_ sender: AnyObject) {
         self.activityIndicator.startAnimating()
-        UIView.animateWithDuration(0.2, animations: {
-            self.activityIndicator.color = UIColor.blueColor()
+        UIView.animate(withDuration: 0.2, animations: {
+            self.activityIndicator.color = UIColor.blue
             self.activityIndicator.alpha = 1.0
         })
         
@@ -93,11 +93,11 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
                 self.showAlert("Error", message: errorString)
                 return
             }
-            if self.activityIndicator.isAnimating() {
+            if self.activityIndicator.isAnimating {
                 self.activityIndicator.stopAnimating()
             }
             print("overwriteLocationObject")
-            self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+            self.presentingViewController?.dismiss(animated: true, completion: nil)
   
         }
     }
@@ -110,24 +110,24 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
                 self.showAlert("Error", message: errorString)
                 return
             }
-            if self.activityIndicator.isAnimating() {
+            if self.activityIndicator.isAnimating {
                 print("activityIndicator is running")
                 self.activityIndicator.stopAnimating()
             }
-            print("activity Indicator is stopped \(self.activityIndicator.isAnimating())")
-            self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+            print("activity Indicator is stopped \(self.activityIndicator.isAnimating)")
+            self.presentingViewController?.dismiss(animated: true, completion: nil)
             
         }
     }
     
     //MARK: - Helper Methods
     
-    func verifyUrl(urlString: String?) ->Bool{
+    func verifyUrl(_ urlString: String?) ->Bool{
         if let urlString = urlString{
             let pattern = "^(https?:\\/\\/)([a-zA-Z0-9_\\-~]+\\.)+[a-zA-Z0-9_\\-~\\/\\.]+$"
-            if let _ = urlString.rangeOfString(pattern, options: .RegularExpressionSearch){
-                if let url = NSURL(string: urlString){
-                    if UIApplication.sharedApplication().canOpenURL(url){
+            if let _ = urlString.range(of: pattern, options: .regularExpression){
+                if let url = URL(string: urlString){
+                    if UIApplication.shared.canOpenURL(url){
                         return true
                     } else { return false }
                 } else { return false }
@@ -135,28 +135,28 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
         } else { return false }
     }
     
-    func showAlert(title: String? , message: String?) {
-        dispatch_async(dispatch_get_main_queue()){
+    func showAlert(_ title: String? , message: String?) {
+        DispatchQueue.main.async{
             self.activityIndicator.stopAnimating()
             if title != nil && message != nil {
                 let errorAlert =
-                UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
-                errorAlert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.Default, handler: nil))
-                self.presentViewController(errorAlert, animated: true, completion: nil)
+                UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+                errorAlert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.default, handler: nil))
+                self.present(errorAlert, animated: true, completion: nil)
             }
         }
     }
     
     //MARK: - User Interface
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if linkTextField.isFirstResponder() {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if linkTextField.isFirstResponder {
             linkTextField.resignFirstResponder()
         }
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        if linkTextField.isFirstResponder() && linkTextField.text!.isEmpty == false{
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if linkTextField.isFirstResponder && linkTextField.text!.isEmpty == false{
             linkTextField.resignFirstResponder()
         }
         
@@ -165,14 +165,14 @@ class LinkEntryController: UIViewController, UITextFieldDelegate {
     
     // MARK: - MKMapViewDelegate
     
-    func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+    func mapView(_ mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
         let reuseId = "pin"
-        var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
         if pinView == nil {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
             pinView!.canShowCallout = true
-            pinView!.pinTintColor = UIColor.redColor()
-            pinView!.rightCalloutAccessoryView = UIButton(type: UIButtonType.DetailDisclosure)
+            pinView!.pinTintColor = UIColor.red
+            pinView!.rightCalloutAccessoryView = UIButton(type: UIButtonType.detailDisclosure)
         }
         else { pinView!.annotation = annotation }
         

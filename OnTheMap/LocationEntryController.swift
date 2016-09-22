@@ -20,23 +20,23 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         locationTextField.delegate = self
         signUpForNotifications()
-        applicationDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
+        applicationDelegate = UIApplication.shared.delegate as? AppDelegate
         activityIndicator.hidesWhenStopped = true
         studentClient = StudentClient.sharedInstance
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         print("$$$$$ View Will Appear..."  )
-        if activityIndicator.isAnimating() {
+        if activityIndicator.isAnimating {
             activityIndicator.stopAnimating()
         }
     }
     
-    @IBAction func didPressCancel(sender: AnyObject) {
-        self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func didPressCancel(_ sender: AnyObject) {
+        self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func didPressEnter(sender: AnyObject) {
+    @IBAction func didPressEnter(_ sender: AnyObject) {
         guard locationTextField.text?.isEmpty == false else {
             showAlert("ERROR", message: "Enter a location")
             return
@@ -52,7 +52,7 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
                 return
             }
 
-            guard let _ = self.applicationDelegate, placemark = placemark else {
+            guard let _ = self.applicationDelegate, let placemark = placemark else {
                 self.showAlert("ERROR", message: "Unable to find location")
                 return
             }
@@ -61,7 +61,7 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
                 return
             }
             let placemark1 = placemark.first!
-            guard let country = placemark1.country, state = placemark1.administrativeArea else {
+            guard let country = placemark1.country, let state = placemark1.administrativeArea else {
                 self.showAlert("ERROR", message:"Be more specific in location")
                 return
             }
@@ -84,31 +84,31 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
     //MARK: - Helper Methods
     
     func signUpForNotifications() {
-        let center: NSNotificationCenter = NSNotificationCenter.defaultCenter()
+        let center: NotificationCenter = NotificationCenter.default
         center.addObserver(self, selector: #selector(LocationEntryController.keyboardDidShow(_:)), name:
-            UIKeyboardWillShowNotification, object: nil)
-        center.addObserver(self, selector: #selector(LocationEntryController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+            NSNotification.Name.UIKeyboardWillShow, object: nil)
+        center.addObserver(self, selector: #selector(LocationEntryController.keyboardWillHide(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     //Shows alert and stops activity indicator
-    func showAlert(title: String? , message: String?) {
-        dispatch_async(dispatch_get_main_queue()){
+    func showAlert(_ title: String? , message: String?) {
+        DispatchQueue.main.async{
             self.activityIndicator.stopAnimating()
             if title != nil && message != nil {
                 let errorAlert =
-                UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
-                errorAlert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.Default, handler: nil))
-                self.presentViewController(errorAlert, animated: true, completion: nil)
+                UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+                errorAlert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.default, handler: nil))
+                self.present(errorAlert, animated: true, completion: nil)
             }
         }
     }
     
     //Presents viewController if value is not nil; on main thread
     
-    func presentViewWith(mapString: String?, lat: Double?, lon: Double? ) {
-        dispatch_async(dispatch_get_main_queue()){
+    func presentViewWith(_ mapString: String?, lat: Double?, lon: Double? ) {
+        DispatchQueue.main.async{
             if mapString != nil {
-                self.performSegueWithIdentifier("showLinkController", sender: self)
+                self.performSegue(withIdentifier: "showLinkController", sender: self)
             } else {
                 self.showAlert("ERROR", message: "Unable to find location: please try again")
             }
@@ -118,26 +118,26 @@ class LocationEntryController: UIViewController, UITextFieldDelegate {
     //MARK: - User Interface 
     // Must have else crash.
 
-    func keyboardDidShow(notification: NSNotification){
+    func keyboardDidShow(_ notification: Notification){
         if view.frame.origin.y == 0 {
             view.frame.origin.y =
                 -(locationTextField.frame.origin.y - topLayoutGuide.length  )
         }
     }
     
-    func keyboardWillHide(notification: NSNotification){
+    func keyboardWillHide(_ notification: Notification){
         //Move view back in position
         self.view.frame.origin.y = 0.0
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if locationTextField.isFirstResponder() {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if locationTextField.isFirstResponder {
             locationTextField.resignFirstResponder()
         }
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        if locationTextField.isFirstResponder() && locationTextField.text!.isEmpty == false{
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if locationTextField.isFirstResponder && locationTextField.text!.isEmpty == false{
             locationTextField.resignFirstResponder()
         }
         return false

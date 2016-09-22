@@ -16,30 +16,30 @@ class ParseClient: NSObject {
     static let aplicationID = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
     static let sharedInstance = ParseClient()
     typealias ParseCompletionHandler =
-        (data: [[String: AnyObject]]?, errorString: String?) -> Void
-    let session: NSURLSession
+        (_ data: [[String: AnyObject]]?, _ errorString: String?) -> Void
+    let session: URLSession
  
     override init() {
-        session = NSURLSession.sharedSession()
+        session = URLSession.shared
         super.init()
     }
     
     // MARK: - API Methods
     
-    func getStudentsLocation(completionHandler: (data: [[String: AnyObject]]?, errorString: String?) -> Void){
+    func getStudentsLocation(_ completionHandler: @escaping (_ data: [[String: AnyObject]]?, _ errorString: String?) -> Void){
         let methodParameters = [
             "order": "-updatedAt",
             "limit": 100,
-        ]
-        let request = NSMutableURLRequest(URL: NSURL(string:
-            ParseClient.studentLocationUrl + escapedParameters(methodParameters))!)
+        ] as [String : Any]
+        let request = NSMutableURLRequest(url: URL(string:
+            ParseClient.studentLocationUrl + escapedParameters(methodParameters as [String : AnyObject]))!)
         request.addValue(ParseClient.aplicationID,
             forHTTPHeaderField: "X-Parse-Application-Id")
         request.addValue(ParseClient.apiKey,
             forHTTPHeaderField: "X-Parse-REST-API-Key")
-        request.HTTPMethod = "GET"
+        request.httpMethod = "GET"
         
-        let task = session.dataTaskWithRequest(request) {
+        let task = session.dataTask(with: request, completionHandler: {
             (data, response, error) in
             if let error = error {
                 completionHandler(data: nil, errorString: error.localizedDescription)
@@ -50,24 +50,24 @@ class ParseClient: NSObject {
             } else {
                 completionHandler(data: nil, errorString: "Unable to get student location data")
             }
-        }
+        }) 
         task.resume()
     }
     
-    func queryForStudent(uniqueKey: String?, completionHandler:(data: Student?, errorString: String?) -> Void){
+    func queryForStudent(_ uniqueKey: String?, completionHandler:@escaping (_ data: Student?, _ errorString: String?) -> Void){
         if let uniqueKey = uniqueKey {
             let methodParameters = [
                 "where": "{\"uniqueKey\": \"\(uniqueKey)\"}"
             ]
-            let urlString = ParseClient.studentLocationUrl + escapedParameters(methodParameters)
-            if let url = NSURL(string: urlString) {
-                let request = NSMutableURLRequest(URL: url)
+            let urlString = ParseClient.studentLocationUrl + escapedParameters(methodParameters as [String : AnyObject])
+            if let url = URL(string: urlString) {
+                let request = NSMutableURLRequest(url: url)
                 request.addValue(ParseClient.aplicationID,
                     forHTTPHeaderField: "X-Parse-Application-Id")
                 request.addValue(ParseClient.apiKey,
                     forHTTPHeaderField: "X-Parse-REST-API-Key")
-                request.HTTPMethod = "GET"
-                let task = session.dataTaskWithRequest(request) {
+                request.httpMethod = "GET"
+                let task = session.dataTask(with: request, completionHandler: {
                     (data, response, error) in
                     if let error = error{
                         completionHandler(data: nil, errorString: error.localizedDescription)
@@ -78,47 +78,47 @@ class ParseClient: NSObject {
                     } else {
                         completionHandler(data: nil, errorString: "Unable to get user data")
                     }
-                }
+                }) 
                 task.resume()
             }
         }
     }
     
-    func deleteStudent(objectId: String?, completionHandler:(completed: Bool?,errorString: String?) -> Void ) {
+    func deleteStudent(_ objectId: String?, completionHandler:@escaping (_ completed: Bool?,_ errorString: String?) -> Void ) {
         if objectId == nil {
-            completionHandler(completed: false, errorString: "Invalid objectId")
+            completionHandler(false, "Invalid objectId")
         }
         if let objectId = objectId {
             let urlString = ParseClient.studentLocationUrl + "/" + objectId
-            let request = NSMutableURLRequest(URL: NSURL(string: urlString)!)
+            let request = NSMutableURLRequest(url: URL(string: urlString)!)
             request.addValue(ParseClient.aplicationID, forHTTPHeaderField: "X-Parse-Application-Id")
             request.addValue(ParseClient.apiKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
-            request.HTTPMethod = "DELETE"
-            let task = session.dataTaskWithRequest(request) {
+            request.httpMethod = "DELETE"
+            let task = session.dataTask(with: request, completionHandler: {
                 (data, response, error) in
                 if let error = error {
                     completionHandler(completed: false, errorString: error.localizedDescription)
                     return
                 }
                 completionHandler(completed: true, errorString: nil)
-            }; task.resume()
+            }) ; task.resume()
         }
     }
     
-    func postStudent(student: Student?, completionHandler:(completed: Bool?, errorString: String?) -> Void ){
+    func postStudent(_ student: Student?, completionHandler:@escaping (_ completed: Bool?, _ errorString: String?) -> Void ){
         if student == nil {
-            completionHandler(completed: false, errorString: "Invalid student data")
+            completionHandler(false, "Invalid student data")
             return
         }
-        if let uniqueKey = student!.uniqueKey, firstName = student!.firstName, lastName = student!.lastName, mapString = student!.mapString, mediaURL = student!.mediaURL, latitude = student!.latitude, longitude = student!.longitude{
-            let request = NSMutableURLRequest(URL: NSURL(string: ParseClient.studentLocationUrl)!)
-            request.HTTPMethod = "POST"
+        if let uniqueKey = student!.uniqueKey, let firstName = student!.firstName, let lastName = student!.lastName, let mapString = student!.mapString, let mediaURL = student!.mediaURL, let latitude = student!.latitude, let longitude = student!.longitude{
+            let request = NSMutableURLRequest(url: URL(string: ParseClient.studentLocationUrl)!)
+            request.httpMethod = "POST"
             request.addValue(ParseClient.aplicationID, forHTTPHeaderField: "X-Parse-Application-Id")
             request.addValue(ParseClient.apiKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.HTTPBody = "{\"uniqueKey\" : \"\(uniqueKey)\", \"firstName\" : \"\(firstName)\", \"lastName\" : \"\(lastName)\",\"mapString\" : \"\(mapString)\", \"mediaURL\" : \"\(mediaURL)\", \"latitude\" : \(latitude), \"longitude\" : \(longitude)}".dataUsingEncoding(NSUTF8StringEncoding)
+            request.httpBody = "{\"uniqueKey\" : \"\(uniqueKey)\", \"firstName\" : \"\(firstName)\", \"lastName\" : \"\(lastName)\",\"mapString\" : \"\(mapString)\", \"mediaURL\" : \"\(mediaURL)\", \"latitude\" : \(latitude), \"longitude\" : \(longitude)}".data(using: String.Encoding.utf8)
             
-            let task = session.dataTaskWithRequest(request) {
+            let task = session.dataTask(with: request, completionHandler: {
                 (data, response, error) in
                 if let error = error {
                     completionHandler(completed: false, errorString: error.localizedDescription)
@@ -129,26 +129,26 @@ class ParseClient: NSObject {
                 } else {
                     completionHandler(completed: false, errorString: "Unable to post student data")
                 }
-            }
+            }) 
             task.resume()
         }
     }
     
-    func overwriteStudent(student: Student?, completionHandler:(completed: Bool?, errorString: String?) -> Void){
+    func overwriteStudent(_ student: Student?, completionHandler:@escaping (_ completed: Bool?, _ errorString: String?) -> Void){
         if let student = student{
-            if let uniqueKey = student.uniqueKey, objectId = student.objectId, firstName = student.firstName, lastName = student.lastName, mapString = student.mapString, mediaURL = student.mediaURL, latitude = student.latitude, longitude = student.longitude{
+            if let uniqueKey = student.uniqueKey, let objectId = student.objectId, let firstName = student.firstName, let lastName = student.lastName, let mapString = student.mapString, let mediaURL = student.mediaURL, let latitude = student.latitude, let longitude = student.longitude{
                 let urlString = ParseClient.studentLocationUrl + "/" + objectId
                 print(">>>>  Overwrit Student URL is \(urlString)")
-                if let url = NSURL(string: urlString){
+                if let url = URL(string: urlString){
                     
-                    let request = NSMutableURLRequest(URL: url)
-                    request.HTTPMethod = "PUT"
+                    let request = NSMutableURLRequest(url: url)
+                    request.httpMethod = "PUT"
                     request.addValue(ParseClient.aplicationID, forHTTPHeaderField: "X-Parse-Application-Id")
                     request.addValue(ParseClient.apiKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
                     request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-                    request.HTTPBody = "{\"uniqueKey\": \"\(uniqueKey)\", \"firstName\": \"\(firstName)\", \"lastName\": \"\(lastName)\",\"mapString\": \"\(mapString)\", \"mediaURL\": \"\(mediaURL)\",\"latitude\": \(latitude), \"longitude\": \(longitude)}".dataUsingEncoding(NSUTF8StringEncoding)
+                    request.httpBody = "{\"uniqueKey\": \"\(uniqueKey)\", \"firstName\": \"\(firstName)\", \"lastName\": \"\(lastName)\",\"mapString\": \"\(mapString)\", \"mediaURL\": \"\(mediaURL)\",\"latitude\": \(latitude), \"longitude\": \(longitude)}".data(using: String.Encoding.utf8)
                     
-                    let task = session.dataTaskWithRequest(request){
+                    let task = session.dataTask(with: request, completionHandler: {
                         (data, response, error) in
                         
                         if let error = error {
@@ -164,115 +164,115 @@ class ParseClient: NSObject {
                             completionHandler(completed: false, errorString: "Error: Unable to overwrite")
                             return
                         }
-                    }
+                    })
                     task.resume()
                 } else {
-                    completionHandler(completed: false, errorString: "Error: Unable to overwrite")
+                    completionHandler(false, "Error: Unable to overwrite")
                 }
             } else {
-                completionHandler(completed: false, errorString: "Error: Unable to overwrite")
+                completionHandler(false, "Error: Unable to overwrite")
             }
         } else {
-            completionHandler(completed: false, errorString: "Error: Unable to overwrite")
+            completionHandler(false, "Error: Unable to overwrite")
         }
     }
     
     //MARK: - Helper Methods
     
-    func parseLocationRequest(data data: NSData, completionHandler: ParseCompletionHandler){
+    func parseLocationRequest(data: Data, completionHandler: ParseCompletionHandler){
         do  {
             if let parsedData =
-                try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as? [String: AnyObject]{
+                try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as? [String: AnyObject]{
                     if let students = parsedData["results"] as? [[String: AnyObject]]{
-                        completionHandler(data: students, errorString: nil)
+                        completionHandler(students, nil)
                         return
                     }
                     if let errorResults = parsedData["error"] as? String{
-                        completionHandler(data: nil, errorString: "\(errorResults): validate keys")
+                        completionHandler(nil, "\(errorResults): validate keys")
                         return
                     }
-                    completionHandler(data: nil, errorString: "Unable to load students data")
+                    completionHandler(nil, "Unable to load students data")
                     return
             }
         } catch let error as NSError {
-            completionHandler(data: nil, errorString: error.localizedDescription)
+            completionHandler(nil, error.localizedDescription)
         }
     }
     
-    func parseQueryRequest(data data: NSData, completionHandler: (data: Student?, errorString: String?) -> Void){
+    func parseQueryRequest(data: Data, completionHandler: (_ data: Student?, _ errorString: String?) -> Void){
         do{
             if let parsedData =
-                try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as? [String: AnyObject]{
+                try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as? [String: AnyObject]{
                     if let students = parsedData["results"] as? [[String: AnyObject]]{
                         if let student = students.first{
                             //RETURN THE FIRST STUDENT FOUND IN THE ARRAY OF RESULTS
-                            let studentToReturn = Student(dictionary: student)
-                            completionHandler(data: studentToReturn, errorString: nil)
+                            let studentToReturn = Student(dictionary: student as NSDictionary)
+                            completionHandler(studentToReturn, nil)
                             return
                         } else if students.isEmpty{
                             //STUDENT LOCATIONS FOUND ARE ZERO
-                            completionHandler(data: nil, errorString: nil)
+                            completionHandler(nil, nil)
                             return
                         }
                     } else {
-                        completionHandler(data: nil, errorString: "Unable to retrieve student data")
+                        completionHandler(nil, "Unable to retrieve student data")
                     }
             } else {
-                completionHandler(data: nil, errorString: "Unable to retrieve student data")
+                completionHandler(nil, "Unable to retrieve student data")
             }
         } catch let error as NSError{
-            completionHandler(data: nil, errorString: error.localizedDescription)
+            completionHandler(nil, error.localizedDescription)
         }
     }
     
-    func parsePostStudentRequest(data data: NSData, completionHandler:(completed: Bool?, errorString: String?) -> Void) {
+    func parsePostStudentRequest(data: Data, completionHandler:(_ completed: Bool?, _ errorString: String?) -> Void) {
         do{
             if let parsedData =
-                try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as? [String: AnyObject]{
+                try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as? [String: AnyObject]{
                     if let _ = parsedData["objectId"] as? String{
-                        completionHandler(completed: true, errorString: nil)
+                        completionHandler(true, nil)
                         return
                     }
-                    completionHandler(completed: false, errorString: "Unable to add location")
+                    completionHandler(false, "Unable to add location")
             } else {
-                completionHandler(completed: false, errorString: "Unable to add location")
+                completionHandler(false, "Unable to add location")
             }
         } catch let error as NSError{
-            completionHandler(completed: false, errorString: "Error adding location: \(error.localizedDescription)")
+            completionHandler(false, "Error adding location: \(error.localizedDescription)")
         }
     }
     
-    func parseOverwriteRequest(data data: NSData, completionHandler: (completed: Bool?, errorString: String?) -> Void){
+    func parseOverwriteRequest(data: Data, completionHandler: (_ completed: Bool?, _ errorString: String?) -> Void){
         
         //var parsedData: AnyObject!
         do {
             //parsedData =
-            try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+            try JSONSerialization.jsonObject(with: data, options: .allowFragments)
             
         } catch {
             let userInfo = [NSLocalizedDescriptionKey : "parseOVerwriteRequest: Could not parse the data as JSON: '\(data)'"]
-            completionHandler(completed: nil, errorString: userInfo.description)
+            completionHandler(nil, userInfo.description)
             
         }
         
-        completionHandler(completed: true, errorString: nil)
+        completionHandler(true, nil)
     }
     
     /* Helper function: Given a dictionary of parameters,
     convert to a string for a url */
-    func escapedParameters(parameters: [String : AnyObject]) -> String {
+    func escapedParameters(_ parameters: [String : AnyObject]) -> String {
         var urlVars = [String]()
         for (key, value) in parameters {
             /* Make sure that it is a string value */
             let stringValue = "\(value)"
             /* Escape it */
-            let escapedValue = stringValue.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+            let escapedValue = stringValue.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
             /* FIX: Replace spaces with '+' */
-            let replaceSpaceValue = escapedValue!.stringByReplacingOccurrencesOfString(" ", withString: "+", options: NSStringCompareOptions.LiteralSearch, range: nil)
+            let replaceSpaceValue = escapedValue!.replacingOccurrences(of: " ", with: "+", options: NSString.CompareOptions.literal, range: nil)
             /* Append it */
             urlVars += [key + "=" + "\(replaceSpaceValue)"]
         }
-        return (!urlVars.isEmpty ? "?" : "") + urlVars.joinWithSeparator("&")
+        return (!urlVars.isEmpty ? "?" : "") + urlVars.joined(separator: "&")
     }
     
 }
